@@ -1,17 +1,22 @@
 <template>
-  <v-card height="150">
-    <v-footer
-      padless
-      class="font-weight-medium"
-    >
-      <v-col
-        class="text-center"
-        cols="12"
-      >
-        {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
-      </v-col>
-    </v-footer>
-  </v-card>
+  <v-footer id="core-footer" absolute height="82">
+    <div class="footer-items">
+      <span v-for="link in links" :key="link.name">
+        <a :href="link.Link" class="tertiary--text footer-links">{{
+          link.name
+        }}</a>
+      </span>
+    </div>
+    <v-spacer />
+    <span class="font-weight-light copyright">
+      &copy;
+      {{ new Date().getFullYear() }}
+      <a href="https://limtaegeun.github.io" target="_blank">Steve Lim</a>, made
+      with
+      <v-icon color="tertiary" size="17">mdi-heart</v-icon>
+      for a better havehad
+    </span>
+  </v-footer>
 </template>
 
 <script>
@@ -20,17 +25,25 @@
   export default Vue.extend({
     name: "Footer",
     data: () => ({
-      icons: [
-        'fab fa-facebook',
-        'fab fa-twitter',
-        'fab fa-google-plus',
-        'fab fa-linkedin',
-        'fab fa-instagram',
-      ],
+      links: [
+        { name: "Home", Link: "/#" },
+        { name: "Shop", Link: "https://havehad.kr" },
+        { name: "Admin", Link: "https://wp.havehad.kr" }
+      ]
     })
   })
 </script>
 
 <style scoped lang="scss">
-
+  #core-footer {
+    z-index: 0;
+  }
+  .footer-links {
+    font-weight: 500;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 15px;
+    line-height: 1.8;
+  }
 </style>
