@@ -1,11 +1,11 @@
 <template>
   <v-content class="grey lighten-3">
-    <div id="core-view">
+    <div id="predict-view">
       <v-fade-transition mode="out-in">
         <router-view />
       </v-fade-transition>
     </div>
-    <core-footer></core-footer>
+    <predict-footer />
   </v-content>
 </template>
 
@@ -15,13 +15,13 @@
   export default Vue.extend({
     name: "View",
     components: {
-      CoreFooter: () => import("@/components/home/Footer.vue")
+      PredictFooter: () => import("@/components/predict/Footer")
     },
   })
 </script>
 
 <style scoped lang="scss">
-  #core-view {
+  #predict-view {
     padding-bottom: 100px;
   }
 </style>
