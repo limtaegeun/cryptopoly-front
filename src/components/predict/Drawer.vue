@@ -67,7 +67,7 @@
   export default Vue.extend({
     name: "Drawer",
     props: {
-      opened: {
+      expandOnHover: {
         type: Boolean,
         default: false
       }
@@ -75,18 +75,13 @@
     data: () => ({
       links: [
         {
-          icon: "mdi-math-log",
-          text: "로그 데이터",
+          icon: "",
+          text: "비트코인 (BTC)",
           child: [
             {
-              to: "addcartlog",
-              icon: "mdi-cart-plus",
-              text: "장바구니 로그"
-            },
-            {
-              to: "purchaselog",
-              icon: "mdi-cash-usd-outline",
-              text: "구매 로그"
+              to: "predict/close/btc",
+              icon: "",
+              text: "종가 예측"
             }
           ]
         }

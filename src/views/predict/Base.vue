@@ -13,7 +13,10 @@ export default {
     PredictDrawer: () => import("@/components/predict/Drawer"),
     PredictAppBar: () => import("@/components/predict/AppBar"),
     PredictView: () => import("@/components/predict/View")
-  }
+  },
+  data: () => ({
+    expandOnHover: false,
+  }),
 };
 </script>
 

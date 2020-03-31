@@ -13,7 +13,7 @@
   import Vue from "vue";
 
   export default Vue.extend({
-    name: "View",
+    name: "ProdictView",
     components: {
       PredictFooter: () => import("@/components/predict/Footer")
     },
