@@ -3,6 +3,7 @@ const About = () =>
   import(/* webpackChunkName: "about" */ "../views/About.vue");
 const Main = () => import('../views/Main.vue')
 const SignUp = () => import('../views/SignUp.vue')
+const Login = () => import('../views/Login.vue')
 const CloseChart = () => import('../views/predict/CloseChart.vue')
 // predict
 const PredictBase = () => import('../views/predict/Base.vue')
@@ -17,6 +18,9 @@ export default [
     },{
       path: '/signup',
       component: SignUp
+    },{
+      path: '/login',
+      component: Login
     }]
   },
   {

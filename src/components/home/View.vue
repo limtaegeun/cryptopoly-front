@@ -13,7 +13,7 @@
   import Vue from "vue";
 
   export default Vue.extend({
-    name: "View",
+    name: "HomeView",
     components: {
       CoreFooter: () => import("@/components/home/Footer.vue")
     },

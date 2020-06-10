@@ -82,16 +82,15 @@ export default Vue.extend({
     // for table
     headers: [
       {
-        text: "순위",
+        text: "date",
         align: "left",
-        value: "rank"
+        value: "date"
       },
-      { text: "id", value: "id" },
-      { text: "썸네일", value: "imgSrc" },
-      { text: "상품 명", value: "productName" },
-      { text: "수량", value: "count" },
-      { text: "회원수", value: "member" },
-      { text: "비회원수", value: "undefine" }
+      { text: "high", value: "high" },
+      { text: "low", value: "low" },
+      { text: "open", value: "open" },
+      { text: "close", value: "close" },
+      { text: "volume", value: "volume" }
     ],
     charts: []
   }),
