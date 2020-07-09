@@ -92,10 +92,7 @@ export default {
     ],
     confirmPwd: "",
     confirmRules: [
-      v => !!v || "Confirm password is required",
-      v =>
-        /(?=.{9,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/.test(v) ||
-        "Use at least 9 characters in combination of uppercase, lowercase, numbers, and symbols"
+      v => !!v || "Confirm password is required"
     ],
     select: null,
     checkbox: false,

@@ -10,12 +10,18 @@
                 v-model="pwd"
                 :rules="pwdRules"
                 label="Password"
+                :append-icon="pwdShow ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="pwdShow ? 'text' : 'password'"
+                @click:append="pwdShow = !pwdShow"
                 required
               ></v-text-field>
               <v-text-field
                 v-model="confirmPwd"
                 :rules="confirmRules"
                 label="Comfirm password"
+                :append-icon="pwdShow ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="pwdShow ? 'text' : 'password'"
+                @click:append="pwdShow = !pwdShow"
                 required
               ></v-text-field>
             </v-form>
@@ -58,10 +64,7 @@ export default {
     ],
     confirmPwd: "",
     confirmRules: [
-      v => !!v || "Confirm password is required",
-      v =>
-        /(?=.{9,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/.test(v) ||
-        "Use at least 9 characters in combination of uppercase, lowercase, numbers, and symbols"
+      v => !!v || "Confirm password is required"
     ],
     lazy: false,
     loading: false,
