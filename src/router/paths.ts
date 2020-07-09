@@ -2,15 +2,16 @@ const Home = () => import("../views/Home.vue");
 const About = () =>
   import(/* webpackChunkName: "about" */ "../views/About.vue");
 const Main = () => import('../views/Main.vue')
-const SignUp = () => import('../views/SignUp.vue')
-const Login = () => import('../views/Login.vue')
+const SignUp = () => import('../views/user/SignUp.vue')
+const Login = () => import('../views/user/Login.vue')
+const Forget = () => import('../views/user/ForgetPwd.vue')
 const CloseChart = () => import('../views/predict/CloseChart.vue')
+const Reset = () => import('../views/user/ResetPassword.vue')
 // predict
 const PredictBase = () => import('../views/predict/Base.vue')
 export default [
   {
     path: "/",
-    name: "Home",
     component: Home,
     children: [{
       path: '/',
@@ -21,6 +22,12 @@ export default [
     },{
       path: '/login',
       component: Login
+    },{
+      path: '/forget',
+      component: Forget
+    },{
+      path: '/reset',
+      component: Reset
     }]
   },
   {

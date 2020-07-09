@@ -1,23 +1,15 @@
 <template>
-  <div class="login-view">
+  <div class="forget-password-view">
     <v-container class="container">
       <v-row class="row-wrapper" align="center" justify="center">
-        <v-card class="login-card" raised tile :loading="loading">
+        <v-card class="forget-password-card" raised tile :loading="loading">
+          <v-card-title class="headline">Forget Password</v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="valid" :lazy-validation="lazy">
               <v-text-field
                 v-model="email"
                 :rules="emailRules"
                 label="e-mail"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="pwd"
-                :rules="pwdRules"
-                label="Password"
-                :append-icon="pwdShow ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="pwdShow ? 'text' : 'password'"
-                @click:append="pwdShow = !pwdShow"
                 required
               ></v-text-field>
             </v-form>
@@ -28,7 +20,7 @@
               :disabled="!valid"
               color="success"
               class="mr-4"
-              @click="login"
+              @click="submit"
             >
               login
             </v-btn>
@@ -42,12 +34,13 @@
         </v-btn>
       </v-snackbar>
     </v-container>
+
   </div>
 </template>
 
 <script>
   export default {
-    name: "SignIn",
+    name: "FindPwd",
     data: () => ({
       valid: true,
       email: "",
@@ -55,42 +48,32 @@
         v => !!v || "E-mail is required",
         v => /.+@.+\..+/.test(v) || "E-mail must be valid"
       ],
-      pwd: "",
-      pwdShow: false,
-      pwdRules: [
-        v => !!v || "Password is required"
-      ],
       lazy: false,
       loading: false,
       fail: false,
       errMsg: "Sign up failed"
     }),
     methods: {
-      login() {
+      submit() {
         this.$refs.form.validate();
         if (!this.valid) {
           return;
         }
         let data = {
           email: this.email,
-          password: this.pwd,
-          username: this.name
         };
         this.$http
-          .post(this.$API + "/user/login", data)
-          .then(() => {
+          .post(this.$API + "/forget/auth", data)
+          .then(res => {
             this.loading = false;
-            // console.log("SUCCESS!!");
+            console.log(res);
+            location.href = 'http://localhost:8080/predict'
+            console.log('success')
           })
           .catch(err => {
             this.loading = false;
-            try {
-              this.errMsg = err.response.data.error.email.msg;
-            } catch (e) {
-              this.errMsg = "Sign up failed";
-            }
             this.fail = true;
-            // console.log("FAILURE!!");
+            console.log(err.response);
           });
       },
     }
@@ -98,7 +81,7 @@
 </script>
 
 <style scoped lang="scss">
-  .login-view {
+  .forget-password-view {
     min-height: 400px;
   .container {
     height: 100%;
@@ -107,9 +90,8 @@
     height: 100%;
   }
   }
-  .login-card {
+  .forget-password-card {
     width: 100%;
     max-width: 400px;
-    padding: 20px 10px;
   }
 </style>
