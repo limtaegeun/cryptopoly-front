@@ -10,9 +10,9 @@
 export default {
   name: "Base",
   components: {
-    PredictDrawer: () => import("@/components/predict/Drawer"),
-    PredictAppBar: () => import("@/components/predict/AppBar"),
-    PredictView: () => import("@/components/predict/View")
+    PredictDrawer: () => import("@/components/console/Drawer"),
+    PredictAppBar: () => import("@/components/console/AppBar"),
+    PredictView: () => import("@/components/console/View")
   },
   data: () => ({
     expandOnHover: false,

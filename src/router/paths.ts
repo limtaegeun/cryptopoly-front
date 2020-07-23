@@ -5,10 +5,18 @@ const Main = () => import('../views/Main.vue')
 const SignUp = () => import('../views/user/SignUp.vue')
 const Login = () => import('../views/user/Login.vue')
 const Forget = () => import('../views/user/ForgetPwd.vue')
-const CloseChart = () => import('../views/predict/CloseChart.vue')
 const Reset = () => import('../views/user/ResetPassword.vue')
-// predict
-const PredictBase = () => import('../views/predict/Base.vue')
+
+// console
+const Base = () => import('../views/console/Base.vue')
+const CloseChart = () => import('../views/console/CloseChart.vue')
+const MyProfile = () => import('../views/console/myProfile/MyProfile.vue')
+
+// My profile
+const Profile = () => import('../views/console/myProfile/Profile.vue')
+const Billing = () => import('../views/console/myProfile/BillingInformation.vue')
+const Transaction = () => import('../views/console/myProfile/TransactionHistory.vue')
+
 export default [
   {
     path: "/",
@@ -31,14 +39,37 @@ export default [
     }]
   },
   {
-    path: "/predict",
+    path: "/console",
     name: "Predict",
-    component: PredictBase,
+    component: Base,
     children: [
       {
         path: "close/:code",
         name: "CloseChart",
         component: CloseChart
+      },{
+        path: "myprofile",
+        name: "myprofile",
+        component: MyProfile,
+        redirect: "myprofile/profile",
+
+        children: [
+          {
+            path: "profile",
+            name: "profile",
+            component: Profile
+          },
+          {
+            path: "billing",
+            name: "billing",
+            component: Billing
+          },
+          {
+            path: "transaction",
+            name: "transaction",
+            component: Transaction
+          },
+        ]
       },
     ]
   },

@@ -15,7 +15,7 @@
   export default Vue.extend({
     name: "ProdictView",
     components: {
-      PredictFooter: () => import("@/components/predict/Footer")
+      PredictFooter: () => import("@/components/console/Footer")
     },
   })
 </script>

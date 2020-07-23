@@ -35,7 +35,7 @@
     <v-list nav>
       <!-- Bug in Vuetify for first child of v-list not receiving proper border-radius -->
       <div />
-      <v-list-item to="dash" active-class="primary white--text">
+      <v-list-item to="/console/dash" active-class="primary white--text">
         <v-list-item-action>
           <v-icon>mdi-view-dashboard</v-icon>
         </v-list-item-action>
@@ -57,6 +57,22 @@
         </v-list-item>
       </v-list-group>
     </v-list>
+    <template v-slot:append>
+      <v-list-item to="/console/profile" active-class="primary white--text">
+        <v-list-item-action>
+          <v-avatar>
+            <img v-if="false"
+              src="https://cdn.vuetifyjs.com/images/john.jpg"
+              alt="John"
+            >
+            <span v-else-if="false" class="white--text headline">CJ</span>
+            <v-icon v-else dark>mdi-account-circle</v-icon>
+
+          </v-avatar>
+        </v-list-item-action>
+        <v-list-item-title>My profile</v-list-item-title>
+      </v-list-item>
+    </template>
   </v-navigation-drawer>
 </template>
 
@@ -79,7 +95,7 @@
           text: "비트코인 (BTC)",
           child: [
             {
-              to: "predict/close/btc",
+              to: "/console/close/btc",
               icon: "",
               text: "종가 예측"
             }
