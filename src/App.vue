@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
 import { mapMutations } from "vuex";
 
 export default Vue.extend({
@@ -25,7 +24,7 @@ export default Vue.extend({
   }
 });
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 .keyColor {
   color: #ffc66d;
 }
@@ -34,5 +33,10 @@ export default Vue.extend({
 }
 .background {
   background-color: #2b2b2b;
+}
+
+a {
+  color: #111111;
+  text-decoration: none;
 }
 </style>

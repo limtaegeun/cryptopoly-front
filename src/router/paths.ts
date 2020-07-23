@@ -1,42 +1,50 @@
 const Home = () => import("../views/Home.vue");
 const About = () =>
   import(/* webpackChunkName: "about" */ "../views/About.vue");
-const Main = () => import('../views/Main.vue')
-const SignUp = () => import('../views/user/SignUp.vue')
-const Login = () => import('../views/user/Login.vue')
-const Forget = () => import('../views/user/ForgetPwd.vue')
-const Reset = () => import('../views/user/ResetPassword.vue')
+const Main = () => import("../views/Main.vue");
+const SignUp = () => import("../views/user/SignUp.vue");
+const Login = () => import("../views/user/Login.vue");
+const Forget = () => import("../views/user/ForgetPwd.vue");
+const Reset = () => import("../views/user/ResetPassword.vue");
 
 // console
-const Base = () => import('../views/console/Base.vue')
-const CloseChart = () => import('../views/console/CloseChart.vue')
-const MyProfile = () => import('../views/console/myProfile/MyProfile.vue')
+const Base = () => import("../views/console/Base.vue");
+const CloseChart = () => import("../views/console/CloseChart.vue");
+const MyProfile = () => import("../views/console/myProfile/MyProfile.vue");
 
 // My profile
-const Profile = () => import('../views/console/myProfile/Profile.vue')
-const Billing = () => import('../views/console/myProfile/BillingInformation.vue')
-const Transaction = () => import('../views/console/myProfile/TransactionHistory.vue')
+const Profile = () => import("../views/console/myProfile/Profile.vue");
+const Billing = () =>
+  import("../views/console/myProfile/BillingInformation.vue");
+const Transaction = () =>
+  import("../views/console/myProfile/ChargeHistory.vue");
 
 export default [
   {
     path: "/",
     component: Home,
-    children: [{
-      path: '/',
-      component: Main
-    },{
-      path: '/signup',
-      component: SignUp
-    },{
-      path: '/login',
-      component: Login
-    },{
-      path: '/forget',
-      component: Forget
-    },{
-      path: '/reset',
-      component: Reset
-    }]
+    children: [
+      {
+        path: "/",
+        component: Main
+      },
+      {
+        path: "/signup",
+        component: SignUp
+      },
+      {
+        path: "/login",
+        component: Login
+      },
+      {
+        path: "/forget",
+        component: Forget
+      },
+      {
+        path: "/reset",
+        component: Reset
+      }
+    ]
   },
   {
     path: "/console",
@@ -47,7 +55,8 @@ export default [
         path: "close/:code",
         name: "CloseChart",
         component: CloseChart
-      },{
+      },
+      {
         path: "myprofile",
         name: "myprofile",
         component: MyProfile,
@@ -56,21 +65,21 @@ export default [
         children: [
           {
             path: "profile",
-            name: "profile",
+            name: "Profile",
             component: Profile
           },
           {
             path: "billing",
-            name: "billing",
+            name: "Billing Information",
             component: Billing
           },
           {
-            path: "transaction",
-            name: "transaction",
+            path: "history",
+            name: "Charge History",
             component: Transaction
-          },
+          }
         ]
-      },
+      }
     ]
   },
   {

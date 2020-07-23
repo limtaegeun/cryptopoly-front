@@ -11,10 +11,10 @@
     <span class="font-weight-light copyright">
       &copy;
       {{ new Date().getFullYear() }}
-      <a href="https://limtaegeun.github.io" target="_blank">Steve Lim</a>, made
+      <a href="https://limtaegeun.github.io" target="_blank">cryptopoly</a>, made
       with
       <v-icon color="tertiary" size="17">mdi-heart</v-icon>
-      for a better havehad
+      for a better bitcoin
     </span>
   </v-footer>
 </template>

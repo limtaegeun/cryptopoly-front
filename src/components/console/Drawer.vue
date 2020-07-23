@@ -26,7 +26,7 @@
       </v-list-item-avatar>
 
       <v-list-item-title class="title">
-        HAVE HAD MD
+        Cryptopoly
       </v-list-item-title>
     </v-list-item>
 
@@ -58,7 +58,7 @@
       </v-list-group>
     </v-list>
     <template v-slot:append>
-      <v-list-item to="/console/profile" active-class="primary white--text">
+      <v-list-item to="/console/myprofile" active-class="primary white--text">
         <v-list-item-action>
           <v-avatar>
             <img v-if="false"
