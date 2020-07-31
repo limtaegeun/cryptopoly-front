@@ -16,7 +16,8 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
-    "prefer-const": 0
+    "prefer-const": 0,
+    '@typescript-eslint/no-var-requires': 0  // vue-the-mask 사용 때문에
   },
   overrides: [
     {

@@ -18,7 +18,7 @@ const Billing = () =>
   import("../views/console/myProfile/BillingInformation.vue");
 const Transaction = () =>
   import("../views/console/myProfile/ChargeHistory.vue");
-
+const Subscription = () => import('../views/console/myProfile/Subscription.vue')
 export default [
   {
     path: "/",
@@ -77,6 +77,11 @@ export default [
             path: "history",
             name: "Charge History",
             component: Transaction
+          },
+          {
+            path: "subscription",
+            name: "Subscription",
+            component: Subscription
           }
         ]
       }

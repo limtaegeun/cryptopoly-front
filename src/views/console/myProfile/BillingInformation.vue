@@ -8,38 +8,44 @@
             class="info-text-field"
             outlined
             dense
-            label="Regular"
+            label="Name"
+            v-mask="'XXXXXXXXXXXXXXXXXXXXXX'"
           ></v-text-field>
         </v-col>
         <v-col cols="12">
           <v-text-field
-            class="info-text-field" dense
+            class="info-text-field"
+            dense
             outlined
-            label="Regular"
+            label="Card Number"
+            v-mask="'#### #### #### ####'"
           ></v-text-field>
         </v-col>
         <v-col cols="4">
-          <v-text-field class="info-text-field" dense
+          <v-text-field
+            class="info-text-field"
+            dense
             outlined
-            label="Regular"
+            label="MM/YY"
+            v-mask="'##/##'"
           ></v-text-field>
         </v-col>
         <v-col cols="4">
-          <v-text-field class="info-text-field" dense
+          <v-text-field
+            class="info-text-field"
+            dense
             outlined
-            label="Regular"
+            label="CVC"
+            v-mask="'###'"
           ></v-text-field>
         </v-col>
-        <v-col cols="4">
-          <v-text-field class="info-text-field" dense
-            outlined
-            label="Regular"
-          ></v-text-field>
-        </v-col>
-
       </v-row>
-      <v-row class="button-wrapper">
-        <v-btn style="margin-right: 12px">Edit</v-btn>
+      <v-row v-if="isEdit" class="button-wrapper">
+        <v-btn style="margin-right: 12px">Save</v-btn>
+        <v-btn @click="isEdit=!isEdit">Cancel</v-btn>
+      </v-row>
+      <v-row v-else class="button-wrapper">
+        <v-btn style="margin-right: 12px" @click="isEdit=!isEdit">Edit</v-btn>
         <v-btn>Delete</v-btn>
       </v-row>
     </div>
@@ -48,23 +54,25 @@
 
 <script lang="ts">
 import Vue from "vue";
+const VueTheMask = require("vue-the-mask");
 
 export default Vue.extend({
   name: "BillingInformation",
+  directives: { mask: VueTheMask.mask },
   data: () => ({
-    //
+    isEdit: false
   })
 });
 </script>
 
 <style scoped lang="scss">
-  .info-wrapper {
-    max-width: 500px;
-  }
-  .button-wrapper {
-    padding: 12px;
-  }
-  .info-text-field {
-    height: 25px;
-  }
+.info-wrapper {
+  max-width: 500px;
+}
+.button-wrapper {
+  padding: 12px;
+}
+.info-text-field {
+  height: 25px;
+}
 </style>
