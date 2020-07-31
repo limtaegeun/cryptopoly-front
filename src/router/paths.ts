@@ -6,6 +6,7 @@ const SignUp = () => import("../views/user/SignUp.vue");
 const Login = () => import("../views/user/Login.vue");
 const Forget = () => import("../views/user/ForgetPwd.vue");
 const Reset = () => import("../views/user/ResetPassword.vue");
+const Price = () => import('../views/Price.vue')
 
 // console
 const Base = () => import("../views/console/Base.vue");
@@ -27,6 +28,10 @@ export default [
       {
         path: "/",
         component: Main
+      },
+      {
+        path: "/price",
+        component: Price
       },
       {
         path: "/signup",

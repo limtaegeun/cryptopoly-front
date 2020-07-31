@@ -32,7 +32,7 @@ export default Vue.extend({
   color: #c48c34;
 }
 .background {
-  background-color: #2b2b2b;
+  background-color: #f2f4f8;
 }
 
 a {

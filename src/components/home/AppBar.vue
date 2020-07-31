@@ -5,9 +5,8 @@
     height="44"
     class="home-app-bar"
     dense
-    dark
     flat
-    color="#2b2b2b"
+    color="#f2f4f8"
   >
     <v-toolbar-title>Cryptopoly</v-toolbar-title>
     <v-btn text style="margin-left: 30px">

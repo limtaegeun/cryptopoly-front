@@ -34,6 +34,7 @@
 <style scoped lang="scss">
   #core-footer {
     z-index: 0;
+    background-color: #f2f4f8;
   }
   .footer-links {
     font-weight: 500;
