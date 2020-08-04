@@ -16,7 +16,7 @@
       Contact
     </v-btn>
     <v-spacer></v-spacer>
-    <v-btn rounded color="#c48c34">
+    <v-btn outlined color="#c48c34">
       Start
     </v-btn>
   </v-app-bar>

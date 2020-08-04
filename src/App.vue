@@ -26,7 +26,7 @@ export default Vue.extend({
 </script>
 <style lang="scss">
 .keyColor {
-  color: #ffc66d;
+  color: #f9bc53;
 }
 .dark-key {
   color: #c48c34;
