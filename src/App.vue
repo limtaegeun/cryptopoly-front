@@ -34,9 +34,36 @@ export default Vue.extend({
 .background {
   background-color: #f2f4f8;
 }
-
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
+}
 a {
   color: #111111;
   text-decoration: none;
+}
+button:hover {
+  cursor: pointer;
+  color: #f0bd66;
+}
+button:focus {
+  outline: none;
+  border: none;
+}
+
+.convex-card {
+  border-radius: 8px;
+  box-shadow: 8px 8px 16px 0px rgba(0, 0, 0, 0.06), -8px -8px 16px 0px #fff;
+  background-color: #f2f4f8;
+}
+.convex-btn {
+  border-radius: 8px;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.08), -2px -2px 4px 0px #fff;
+  background-color: #f2f4f8;
 }
 </style>

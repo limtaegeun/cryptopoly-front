@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import StartBanner from "../components/home/StartBanner";
+  import StartBanner from "../components/home/main/StartBanner";
   export default {
     name: "Main",
     components: { StartBanner  }

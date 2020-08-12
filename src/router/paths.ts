@@ -1,12 +1,13 @@
 const Home = () => import("../views/Home.vue");
-const About = () =>
-  import(/* webpackChunkName: "about" */ "../views/About.vue");
+
 const Main = () => import("../views/Main.vue");
 const SignUp = () => import("../views/user/SignUp.vue");
 const Login = () => import("../views/user/Login.vue");
 const Forget = () => import("../views/user/ForgetPwd.vue");
 const Reset = () => import("../views/user/ResetPassword.vue");
 const Price = () => import('../views/Price.vue')
+const About = () =>
+  import(/* webpackChunkName: "about" */ "../views/About.vue");
 
 // console
 const Base = () => import("../views/console/Base.vue");
@@ -32,6 +33,10 @@ export default [
       {
         path: "/price",
         component: Price
+      },
+      {
+        path: "/about",
+        component: About
       },
       {
         path: "/signup",
@@ -91,13 +96,5 @@ export default [
         ]
       }
     ]
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: About
   }
 ];
