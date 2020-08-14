@@ -60,6 +60,14 @@ button:focus {
   border-radius: 8px;
   box-shadow: 8px 8px 16px 0px rgba(0, 0, 0, 0.06), -8px -8px 16px 0px #fff;
   background-color: #f2f4f8;
+  padding: 30px;
+}
+.convex-reverse {
+  border-radius: 8px;
+  box-shadow: inset 3px 3px 6px 0px rgba(0, 0, 0, 0.06),
+    inset -3px -3px 6px 0px #fff;
+  background-color: #f2f4f8;
+  padding: 20px;
 }
 .convex-btn {
   border-radius: 8px;
