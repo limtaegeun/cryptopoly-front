@@ -4,15 +4,26 @@
       <v-row justify="center">
         <v-col cols="11" sm="5">
           <div class="convex-card card-banner">
-            <span class="badge">preparing</span><h2>Keyword Analytics</h2>
+            <h2>Signup to Cryptopoly</h2>
             <p>
-              It predicts investors' investment sentiment by analyzing keywords
-              related to cryptocurrency, such as news, community, and blogs.
+              Essential tool for cryptocurrency investors
             </p>
+            <p>
+              <v-icon small color="#f0bd66">mdi-check</v-icon> Price prediction
+            </p>
+            <p>
+              <v-icon small color="#f0bd66">mdi-check</v-icon> Investment
+              sentiment analysis
+            </p>
+            <p>
+              <v-icon small color="#f0bd66">mdi-check</v-icon> Keyword analysis
+            </p>
+            <button class="convex-card">Start free trial</button>
           </div>
         </v-col>
         <v-col :cols="undefined"></v-col>
-        <v-col cols="11" sm="5"><v-img :src="require('../../../assets/weather.png')"></v-img> </v-col>
+        <v-col cols="11" sm="5"><v-img :src="require('../../../assets/daseboard.png')"></v-img
+        > </v-col>
       </v-row>
     </v-container>
   </div>
@@ -22,7 +33,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "KeywordAnalytics",
+  name: "SignUpTo",
   data: () => ({
     //
   })
@@ -35,14 +46,6 @@ export default Vue.extend({
 }
 .card-banner {
   padding: 50px;
-}
-.badge {
-  padding: 3px 15px;
-  border-radius: 8px;
-  border: #f0bd66 1px solid;
-  color: #f0bd66;
-  display: inline-block;
-  font-size: 16px;
 }
 .inner-card {
   padding: 10px 20px;

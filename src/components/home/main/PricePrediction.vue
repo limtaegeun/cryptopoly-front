@@ -2,10 +2,13 @@
   <div class="price-prediction wrapper-banner">
     <v-container>
       <v-row justify="center">
-        <v-col cols="11" sm="5"> </v-col>
+        <v-col cols="11" sm="5">
+          <v-img :src="require('../../../assets/price.png')"></v-img
+        ></v-col>
+        <v-col :cols="undefined"></v-col>
         <v-col cols="11" sm="5">
           <div class="convex-card card-banner">
-            <h2>Price prediction</h2>
+            <h2>Price Prediction</h2>
             <p>
               High-accuracy cryptocurrency price prediction using deep learning
             </p>

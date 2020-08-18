@@ -2,9 +2,13 @@
   <div class="price-prediction wrapper-banner">
     <v-container>
       <v-row justify="center">
-        <v-col cols="11" sm="5"> </v-col>
+        <v-col cols="11" sm="5">
+          <v-img :src="require('../../../assets/cloud.png')"></v-img
+        ></v-col>
+        <v-col :cols="undefined"></v-col>
         <v-col cols="11" sm="5">
           <div class="convex-card card-banner">
+            <span class="badge">preparing</span>
             <h2>Word Cloud</h2>
             <p>
               It analyzes and displays keywords such as news, community, and
@@ -39,6 +43,14 @@ export default Vue.extend({
   padding: 10px 20px;
   display: inline-block;
   margin-right: 20px;
+}
+.badge {
+  padding: 3px 15px;
+  border-radius: 8px;
+  border: #f0bd66 1px solid;
+  color: #f0bd66;
+  display: inline-block;
+  font-size: 16px;
 }
 h2 {
   margin-bottom: 20px;
