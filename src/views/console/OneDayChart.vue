@@ -61,7 +61,7 @@
 import moment from "moment";
 import Vue from "vue";
 export default Vue.extend({
-  name: "CloseChart",
+  name: "OneDayChart",
   data: () => ({
     dates: [],
     menu: false,
@@ -140,4 +140,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

@@ -34,64 +34,63 @@
         </v-btn>
       </v-snackbar>
     </v-container>
-
   </div>
 </template>
 
 <script>
-  export default {
-    name: "FindPwd",
-    data: () => ({
-      valid: true,
-      email: "",
-      emailRules: [
-        v => !!v || "E-mail is required",
-        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-      ],
-      lazy: false,
-      loading: false,
-      fail: false,
-      errMsg: "Sign up failed"
-    }),
-    methods: {
-      submit() {
-        this.$refs.form.validate();
-        if (!this.valid) {
-          return;
-        }
-        let data = {
-          email: this.email,
-        };
-        this.$http
-          .post(this.$API + "/forget/auth", data)
-          .then(res => {
-            this.loading = false;
-            console.log(res);
-            location.href = 'http://localhost:8080/predict'
-            console.log('success')
-          })
-          .catch(err => {
-            this.loading = false;
-            this.fail = true;
-            console.log(err.response);
-          });
-      },
+export default {
+  name: "FindPwd",
+  data: () => ({
+    valid: true,
+    email: "",
+    emailRules: [
+      v => !!v || "E-mail is required",
+      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+    ],
+    lazy: false,
+    loading: false,
+    fail: false,
+    errMsg: "Sign up failed"
+  }),
+  methods: {
+    submit() {
+      this.$refs.form.validate();
+      if (!this.valid) {
+        return;
+      }
+      let data = {
+        email: this.email
+      };
+      this.$http
+        .post(this.$API + "/forget/auth", data)
+        .then(res => {
+          this.loading = false;
+          console.log(res);
+          location.href = "http://localhost:8080/predict";
+          console.log("success");
+        })
+        .catch(err => {
+          this.loading = false;
+          this.fail = true;
+          console.log(err.response);
+        });
     }
   }
+};
 </script>
 
 <style scoped lang="scss">
-  .forget-password-view {
-    min-height: 400px;
+.forget-password-view {
+  min-height: 400px;
   .container {
     height: 100%;
   }
   .row-wrapper {
     height: 100%;
   }
-  }
-  .forget-password-card {
-    width: 100%;
-    max-width: 400px;
-  }
+}
+.forget-password-card {
+  width: 100%;
+  max-width: 400px;
+}
 </style>

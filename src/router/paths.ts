@@ -5,22 +5,25 @@ const SignUp = () => import("../views/user/SignUp.vue");
 const Login = () => import("../views/user/Login.vue");
 const Forget = () => import("../views/user/ForgetPwd.vue");
 const Reset = () => import("../views/user/ResetPassword.vue");
-const Price = () => import('../views/Price.vue')
+const Price = () => import("../views/Price.vue");
 const About = () =>
   import(/* webpackChunkName: "about" */ "../views/About.vue");
 
 // console
 const Base = () => import("../views/console/Base.vue");
-const CloseChart = () => import("../views/console/CloseChart.vue");
-const MyProfile = () => import("../views/console/myProfile/MyProfile.vue");
+const OneDayChart = () => import("../views/console/OneDayChart.vue");
+const HalfHourChart = () => import("../views/console/HalfHourChart.vue");
 
+const MyProfile = () => import("../views/console/myProfile/MyProfile.vue");
+const Dashboard = () => import("../views/console/Dashboard.vue");
 // My profile
 const Profile = () => import("../views/console/myProfile/Profile.vue");
 const Billing = () =>
   import("../views/console/myProfile/BillingInformation.vue");
 const Transaction = () =>
   import("../views/console/myProfile/ChargeHistory.vue");
-const Subscription = () => import('../views/console/myProfile/Subscription.vue')
+const Subscription = () =>
+  import("../views/console/myProfile/Subscription.vue");
 export default [
   {
     path: "/",
@@ -59,12 +62,21 @@ export default [
   {
     path: "/console",
     name: "Predict",
+    redirect: '/console/dashboard',
     component: Base,
     children: [
       {
-        path: "close/:code",
-        name: "CloseChart",
-        component: CloseChart
+        path: "dashboard",
+        name: "Dashboard",
+        component: Dashboard
+      },{
+        path: "1d/:code",
+        name: "Day Chart",
+        component: OneDayChart
+      },{
+        path: "30min/:code",
+        name: "30Min Chart",
+        component: HalfHourChart
       },
       {
         path: "myprofile",

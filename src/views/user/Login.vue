@@ -24,11 +24,13 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
+            <a href="/forget" class="link">Forgot your password?</a>
             <v-spacer></v-spacer>
             <v-btn
               :disabled="!valid"
-              color="success"
-              class="mr-4"
+              color="#f0bd66"
+              class="mr-4 "
+              outlined
               @click="login"
             >
               login
@@ -47,66 +49,69 @@
 </template>
 
 <script>
-  export default {
-    name: "SignIn",
-    data: () => ({
-      valid: true,
-      email: "",
-      emailRules: [
-        v => !!v || "E-mail is required",
-        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-      ],
-      pwd: "",
-      pwdShow: false,
-      pwdRules: [
-        v => !!v || "Password is required"
-      ],
-      lazy: false,
-      loading: false,
-      fail: false,
-      errMsg: "Sign up failed"
-    }),
-    methods: {
-      login() {
-        this.$refs.form.validate();
-        if (!this.valid) {
-          return;
-        }
-        let data = {
-          email: this.email,
-          password: this.pwd,
-        };
-        this.$http
-          .post(this.$API + "/user/login", data)
-          .then(res => {
-            this.loading = false;
-            console.log(res);
-            location.href = 'http://localhost:8080/predict'
-            console.log('success')
-          })
-          .catch(err => {
-            this.loading = false;
-            this.fail = true;
-            console.log(err.response);
-          });
-      },
+export default {
+  name: "SignIn",
+  data: () => ({
+    valid: true,
+    email: "",
+    emailRules: [
+      v => !!v || "E-mail is required",
+      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+    ],
+    pwd: "",
+    pwdShow: false,
+    pwdRules: [v => !!v || "Password is required"],
+    lazy: false,
+    loading: false,
+    fail: false,
+    errMsg: "Login failed"
+  }),
+  methods: {
+    login() {
+      this.$refs.form.validate();
+      if (!this.valid) {
+        return;
+      }
+      let data = {
+        email: this.email,
+        password: this.pwd
+      };
+      this.$http
+        .post(this.$API + "/user/login", data)
+        .then(res => {
+          this.loading = false;
+          console.log(res);
+          location.href = "http://localhost:8080/console";
+          console.log("success");
+        })
+        .catch(err => {
+          this.loading = false;
+          this.fail = true;
+          console.log(err.response);
+        });
     }
   }
+};
 </script>
 
 <style scoped lang="scss">
-  .login-view {
-    min-height: 400px;
+.login-view {
+  min-height: 400px;
   .container {
     height: 100%;
   }
   .row-wrapper {
     height: 100%;
   }
-  }
-  .login-card {
-    width: 100%;
-    max-width: 400px;
-    padding: 20px 10px;
-  }
+}
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px 10px;
+}
+.link {
+  margin-left: 10px;
+  color: #111111;
+  font-size: 11pt;
+}
 </style>

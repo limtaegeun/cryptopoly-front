@@ -1,6 +1,6 @@
 <template>
   <v-content class="grey lighten-3">
-    <div id="predict-view">
+    <div id="console-view">
       <v-fade-transition mode="out-in">
         <router-view />
       </v-fade-transition>
@@ -21,7 +21,7 @@
 </script>
 
 <style scoped lang="scss">
-  #predict-view {
+  #console-view {
     padding-bottom: 100px;
   }
 </style>
