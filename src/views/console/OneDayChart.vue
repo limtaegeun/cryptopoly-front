@@ -99,9 +99,11 @@ export default Vue.extend({
       return this.dates.join(" ~ ");
     }
   },
-  mounted() {
+  beforeMount() {
     this.currentPreset= "최근 7일"
     this.dates = this.setDatesWithSubract(moment(), 6)
+    this.requestRealData(this.dates[0], this.dates[1], 86400)
+    this.requestPredictData(this.dates[0], this.dates[1], 86400)
   },
   methods: {
     changeDateSave() {
@@ -135,6 +137,39 @@ export default Vue.extend({
           break;
         }
       }
+    },
+    requestRealData (start , end, period) {
+      // let startString = moment(start).format('YYYY-MM-DD')
+      // let endString = end.format('YYYY-MM-DD')
+      console.log('request real')
+      this.$http
+        .get(this.$API + `/chart?start=${start}&end=${end}&period=${period}`)
+        .then((real) => {
+          this.loading = false;
+          console.log('real:',real)
+          console.log("SUCCESS!!");
+        })
+        .catch(err => {
+          this.loading = false;
+          this.fail = true;
+          console.log("FAILURE!!");
+        });
+    },
+    requestPredictData (start , end, period) {
+      // let startString = start.format('YYYY-MM-DD')
+      // let endString = end.format('YYYY-MM-DD')
+      this.$http
+        .get(this.$API + `/predict?start=${start}&end=${end}&period=${period}`)
+        .then(() => {
+          this.loading = false;
+
+          console.log("SUCCESS!!");
+        })
+        .catch(err => {
+          this.loading = false;
+          this.fail = true;
+          console.log("FAILURE!!");
+        });
     }
   }
 });

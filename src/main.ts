@@ -6,12 +6,12 @@ import vuetify from "./plugins/vuetify";
 import "./plugins/axios"
 
 Vue.config.productionTip = false;
-Vue.prototype.$CDN = "https://cdn.cryptopoly.kr";
+Vue.prototype.$CDN = "https://cdn.cryptopoly.kr" as string;
 
 const localhost = "http://localhost:3000";
 const server = "https://api.cryptopoly.kr";
 Vue.prototype.$API =
-    process.env.NODE_ENV === "production" ? server : localhost;
+    process.env.NODE_ENV === "production" ? server : localhost as string;
 
 new Vue({
   router,
