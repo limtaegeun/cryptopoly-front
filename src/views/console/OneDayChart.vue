@@ -40,13 +40,32 @@
           </v-menu>
         </v-col>
         <v-col cols="12">
-          <!-- chart -->
+          <div class="chart-wrapper">
+            <line-chart
+              class="line-chart"
+              ref="priceChart"
+              :chart-data="chartDataCollection"
+              :options="chartOptions"
+            ></line-chart>
+          </div>
         </v-col>
         <v-col cols="12">
           <!-- data table-->
+          <h3 class="mb-2">Actual Price</h3>
           <v-data-table
-            :headers="headers"
-            :items="charts"
+            :headers="actualHeaders"
+            :items="actualPrices"
+            dense
+            :items-per-page="10"
+            class="elevation-1"
+          ></v-data-table>
+        </v-col>
+        <v-col cols="12">
+          <!-- data table-->
+          <h3 class="mb-2">Target Price</h3>
+          <v-data-table
+            :headers="targetHeaders"
+            :items="targetPrices"
             dense
             :items-per-page="10"
             class="elevation-1"
@@ -60,27 +79,27 @@
 <script>
 import moment from "moment";
 import Vue from "vue";
+import LineChart from "../../components/chart/LineChart";
+import _ from "lodash";
 export default Vue.extend({
   name: "OneDayChart",
+  components: { LineChart },
   data: () => ({
     dates: [],
+    period: 86400,
+    sortingDates: [],
     menu: false,
     tableLoading: true,
     snackbar: false,
     datePreset: ["어제", "최근 7일", "지난 30일", "맞춤"],
     currentPreset: "최근 7일",
     // for chart.js
-    chartData: null,
+    chartDataCollection: {},
     chartOptions: {
-      legend: { position: "left" },
-      title: {
-        display: true,
-        text: "Top 10 Product",
-        fontSize: 20
-      }
+      maintainAspectRatio: false
     },
     // for table
-    headers: [
+    actualHeaders: [
       {
         text: "date",
         align: "left",
@@ -92,87 +111,211 @@ export default Vue.extend({
       { text: "close", value: "close" },
       { text: "volume", value: "volume" }
     ],
-    charts: []
+    targetHeaders: [
+      {
+        text: "date",
+        align: "left",
+        value: "date"
+      },
+      { text: "close", value: "close" }
+    ],
+    actualPrices: [],
+    targetPrices: []
   }),
   computed: {
     dateRangeText() {
-      return this.dates.join(" ~ ");
+      return this.sortingDates.join(" ~ ");
+    }
+  },
+  watch: {
+    dates(newValue) {
+      console.log(newValue);
+      let sorting = _.cloneDeep(newValue);
+      sorting.sort((a, b) => {
+        return moment(a).unix() - moment(b).unix();
+      });
+      this.sortingDates = sorting;
+      return newValue;
     }
   },
   beforeMount() {
-    this.currentPreset= "최근 7일"
-    this.dates = this.setDatesWithSubract(moment(), 6)
-    this.requestRealData(this.dates[0], this.dates[1], 86400)
-    this.requestPredictData(this.dates[0], this.dates[1], 86400)
+    this.currentPreset = "최근 7일";
+    this.dates = this.setDatesWithSubtract(moment(), 6);
+    this.sortingDates = this.dates;
+    this.refreshData();
   },
   methods: {
     changeDateSave() {
       // console.log("change");
       this.$refs.menu.save(this.dates);
       this.currentPreset = "맞춤";
-      // this.requestLogs();
+      this.refreshData();
     },
-    setDatesWithSubract(endDay, subtract) {
+    setDatesWithSubtract(endDay, subtract) {
       const startDay = moment(endDay.toISOString()).subtract(subtract, "days");
-      return  [
-        startDay.format("YYYY-MM-DD"),
-        endDay.format("YYYY-MM-DD")
-      ];
-
+      return [startDay.format("YYYY-MM-DD"), endDay.format("YYYY-MM-DD")];
     },
     selectChange(cur) {
       switch (cur) {
         case "어제": {
-          const yest = moment()
-            .subtract(1, "days")
+          const yest = moment().subtract(1, "days");
           this.dates = this.setDatesWithSubract(yest, 0);
           break;
         }
         case "최근 7일": {
-          this.dates = this.setDatesWithSubract(moment(), 6)
+          this.dates = this.setDatesWithSubract(moment(), 6);
           break;
         }
         case "지난 30일": {
-          this.dates = this.setDatesWithSubract(moment(), 30)
+          this.dates = this.setDatesWithSubract(moment(), 30);
           break;
         }
       }
     },
-    requestRealData (start , end, period) {
-      // let startString = moment(start).format('YYYY-MM-DD')
-      // let endString = end.format('YYYY-MM-DD')
-      console.log('request real')
-      this.$http
-        .get(this.$API + `/chart?start=${start}&end=${end}&period=${period}`)
-        .then((real) => {
-          this.loading = false;
-          console.log('real:',real)
-          console.log("SUCCESS!!");
-        })
-        .catch(err => {
-          this.loading = false;
-          this.fail = true;
-          console.log("FAILURE!!");
-        });
+    refreshData() {
+      this.resetChartSize(this.sortingDates, this.period);
+      let divide = this.divideDate(this.sortingDates[0], this.sortingDates[1]);
+      console.log(divide);
+      let asyncArray = [];
+      if (divide.real.length) {
+        asyncArray.push(
+          this.requestRealData(divide.real[0], divide.real[1], 86400)
+        );
+      } else {
+        asyncArray.push(null);
+      }
+      if (divide.predict.length) {
+        asyncArray.push(
+          this.requestPredictData(divide.predict[0], divide.predict[1], 86400)
+        );
+      } else {
+        asyncArray.push(null);
+      }
+      Promise.all(asyncArray).then(value => {
+        this.makeCollection(value[0], value[1]);
+        this.actualPrices = this.makeTableValue(value[0]);
+        this.targetPrices = this.makeTableValue(value[1]);
+      });
     },
-    requestPredictData (start , end, period) {
-      // let startString = start.format('YYYY-MM-DD')
-      // let endString = end.format('YYYY-MM-DD')
-      this.$http
-        .get(this.$API + `/predict?start=${start}&end=${end}&period=${period}`)
-        .then(() => {
-          this.loading = false;
+    resetChartSize(dates, period) {
+      let start = moment(dates[0]).unix();
+      let end = moment(dates[1]).unix();
+      let diff = (end - start) / period;
+      let minWidthOfBlock = 1000 / 30;
+      let neededWidth = parseInt(diff * minWidthOfBlock)
+      let windowWidth = window.innerWidth;
+      if (Object.prototype.hasOwnProperty.call(this.$refs, "priceChart")) {
+        console.log(this.$refs.priceChart);
+        document.querySelector(
+          "#console-view > div > div > div > div:nth-child(4) > div > div"
+        ).style.width =
+            (windowWidth > neededWidth ? '100%' : neededWidth+ "px");
+      }
+    },
+    divideDate(start, end) {
+      let realRange = [];
+      let predictRange = [];
+      let now = moment.utc();
+      start = moment.utc(start);
+      end = moment.utc(end);
 
-          console.log("SUCCESS!!");
-        })
-        .catch(err => {
-          this.loading = false;
-          this.fail = true;
-          console.log("FAILURE!!");
+      if (start.unix() < now.unix()) {
+        realRange = [start.format("YYYY-MM-DD"), now.format("YYYY-MM-DD")];
+      }
+      if (start.unix() < end.unix()) {
+        predictRange = [start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD")];
+      }
+      return { real: realRange, predict: predictRange };
+    },
+    requestRealData(start, end, period) {
+      return new Promise((resolve, reject) => {
+        this.$http
+          .get(this.$API + `/chart?start=${start}&end=${end}&period=${period}`)
+          .then(real => {
+            this.loading = false;
+            console.log("real:", real);
+            console.log("SUCCESS!!");
+            resolve(real.data.data);
+          })
+          .catch(err => {
+            this.loading = false;
+            this.fail = true;
+            console.log("FAILURE!!");
+            reject(err);
+          });
+      });
+    },
+    requestPredictData(start, end, period) {
+      return new Promise((resolve, reject) => {
+        this.$http
+          .get(
+            this.$API + `/predict?start=${start}&end=${end}&period=${period}`
+          )
+          .then(predict => {
+            this.loading = false;
+            console.log(predict);
+            resolve(predict.data.data);
+            console.log("SUCCESS!!");
+          })
+          .catch(err => {
+            this.loading = false;
+            this.fail = true;
+            console.log("FAILURE!!");
+            reject(err);
+          });
+      });
+    },
+    genLabel(real, predict) {
+      let predictDate = predict
+        ? predict.map(el => {
+            return moment.utc(el.date).format("YYYY-MM-DD");
+          })
+        : [];
+      return predictDate;
+    },
+    makeCollection(real, predict) {
+      let dataSets = [];
+      if (real) {
+        dataSets.push({
+          label: "actual", // data 이름
+          borderColor: "#f87979",
+          backgroundColor: "rgba(0,0,0,0)",
+          data: real.map(el => {
+            return el.close;
+          })
         });
+      }
+      if (predict) {
+        dataSets.push({
+          label: "target", // data 이름
+          borderColor: "#f8f413",
+          backgroundColor: "rgba(0,0,0,0)",
+
+          data: predict.map(el => {
+            return el.close;
+          })
+        });
+      }
+      this.chartDataCollection = {
+        labels: this.genLabel(real, predict), // x축 labels
+        datasets: dataSets
+      };
+    },
+    makeTableValue(rawValue) {
+      return rawValue.map(el => {
+        return { ...el, date: moment.utc(el.date).format("YYYY-MM-DD") };
+      });
     }
   }
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.chart-wrapper {
+  overflow-x: auto;
+  .line-chart {
+    max-height: 400px;
+    width: 100%;
+  }
+}
+</style>

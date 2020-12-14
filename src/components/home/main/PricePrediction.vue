@@ -3,7 +3,7 @@
     <v-container>
       <v-row justify="center">
         <v-col cols="11" sm="5">
-          <v-img :src="require('../../../assets/price.png')"></v-img
+          <v-img :src="require('../../../assets/img/price.png')"></v-img
         ></v-col>
         <v-col :cols="undefined"></v-col>
         <v-col cols="11" sm="5">

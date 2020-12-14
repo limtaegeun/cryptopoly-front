@@ -21,7 +21,7 @@
         </v-col>
         <v-col :cols="undefined"></v-col>
         <v-col cols="11" sm="5">
-          <v-img :src="require('../../../assets/start.png')"></v-img>
+          <v-img :src="require('../../../assets/img/start.png')"></v-img>
         </v-col>
       </v-row>
     </v-container>

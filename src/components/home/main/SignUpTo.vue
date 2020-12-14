@@ -22,7 +22,7 @@
           </div>
         </v-col>
         <v-col :cols="undefined"></v-col>
-        <v-col cols="11" sm="5"><v-img contain  :src="require('../../../assets/daseboard.png')"></v-img
+        <v-col cols="11" sm="5"><v-img contain  :src="require('../../../assets/img/daseboard.png')"></v-img
         > </v-col>
       </v-row>
     </v-container>

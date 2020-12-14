@@ -12,7 +12,7 @@
           </div>
         </v-col>
         <v-col :cols="undefined"></v-col>
-        <v-col cols="11" sm="5"><v-img :src="require('../../../assets/weather.png')"></v-img> </v-col>
+        <v-col cols="11" sm="5"><v-img :src="require('../../../assets/img/weather.png')"></v-img> </v-col>
       </v-row>
     </v-container>
   </div>

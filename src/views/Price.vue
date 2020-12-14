@@ -5,9 +5,11 @@
         <div class="plan-card" v-for="(plan, i) in plans" :key="i">
           <h2>{{ plan.name }}</h2>
           <h3>{{ plan.price }}</h3>
-          <p v-for="(text, j) in plan.contents" :key="j" ><v-icon small>mdi-check</v-icon> {{ text }}</p>
+          <p v-for="(text, j) in plan.contents" :key="j">
+            <v-icon small>mdi-check</v-icon> {{ text }}
+          </p>
 
-          <v-btn class="plan-btn"  outlined color="#c48c34">
+          <v-btn class="plan-btn" outlined color="#c48c34">
             Start free trial
           </v-btn>
         </div>
@@ -31,10 +33,7 @@ export default Vue.extend({
       {
         name: "Pro",
         price: "$10",
-        contents: [
-          "Basic content included",
-          "AI price prediction"
-        ]
+        contents: ["Basic content included", "AI price prediction"]
       }
     ]
   }),
@@ -49,7 +48,6 @@ export default Vue.extend({
   min-height: 700px;
   padding: 100px 0;
   h2 {
-
   }
   h3 {
     margin-top: 10px;
@@ -69,9 +67,9 @@ export default Vue.extend({
   margin: 20px 20px;
   min-height: 400px;
 }
-  .plan-btn {
-    position: absolute;
-    bottom: 20px;
-    width: calc(100% - 40px);
-  }
+.plan-btn {
+  position: absolute;
+  bottom: 20px;
+  width: calc(100% - 40px);
+}
 </style>
