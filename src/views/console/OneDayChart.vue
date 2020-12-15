@@ -91,48 +91,50 @@ interface ChartData {
 export default Vue.extend({
   name: "OneDayChart",
   components: { LineChart },
-  data () {return {
-    dates: [],
-    period: 86400,
-    sortingDates: [],
-    menu: false,
-    tableLoading: true,
-    snackbar: false,
-    datePreset: ["어제", "최근 7일", "지난 30일", "맞춤"],
-    currentPreset: "최근 7일",
-    // for chart.js
-    chartDataCollection: {},
-    chartOptions: {
-      maintainAspectRatio: false
-    },
-    // for table
-    actualHeaders: [
-      {
-        text: "date",
-        align: "left",
-        value: "date"
+  data(): any {
+    return {
+      dates: [],
+      period: 86400,
+      sortingDates: [],
+      menu: false,
+      tableLoading: true,
+      snackbar: false,
+      datePreset: ["어제", "최근 7일", "지난 30일", "맞춤"],
+      currentPreset: "최근 7일",
+      // for chart.js
+      chartDataCollection: {},
+      chartOptions: {
+        maintainAspectRatio: false
       },
-      { text: "high", value: "high" },
-      { text: "low", value: "low" },
-      { text: "open", value: "open" },
-      { text: "close", value: "close" },
-      { text: "volume", value: "volume" }
-    ],
-    targetHeaders: [
-      {
-        text: "date",
-        align: "left",
-        value: "date"
-      },
-      { text: "close", value: "close" }
-    ],
-    actualPrices: [],
-    targetPrices: [],
-    loading: false,
-    fail: false
-  }},
+      // for table
+      actualHeaders: [
+        {
+          text: "date",
+          align: "left",
+          value: "date"
+        },
+        { text: "high", value: "high" },
+        { text: "low", value: "low" },
+        { text: "open", value: "open" },
+        { text: "close", value: "close" },
+        { text: "volume", value: "volume" }
+      ],
+      targetHeaders: [
+        {
+          text: "date",
+          align: "left",
+          value: "date"
+        },
+        { text: "close", value: "close" }
+      ],
+      actualPrices: [],
+      targetPrices: [],
+      loading: false,
+      fail: false
+    };
+  },
   computed: {
-    dateRangeText() {
+    dateRangeText(): string {
       return this.sortingDates.join(" ~ ");
     }
   },
@@ -217,11 +219,13 @@ export default Vue.extend({
       let neededWidth = Math.round(diff * minWidthOfBlock);
       let windowWidth = window.innerWidth;
       if (Object.prototype.hasOwnProperty.call(this.$refs, "priceChart")) {
-        console.log(this.$refs.priceChart);
-        (document.querySelector(
+        let chartEl = document.querySelector(
           "#console-view > div > div > div > div:nth-child(4) > div > div"
-        )! as HTMLElement).style.width =
-          windowWidth > neededWidth ? "100%" : neededWidth + "px";
+        ) as HTMLElement;
+        if (chartEl) {
+          chartEl.style.width =
+            windowWidth > neededWidth ? "100%" : neededWidth + "px";
+        }
       }
     },
     divideDate(
@@ -248,17 +252,21 @@ export default Vue.extend({
       }
       return { real: realRange, predict: predictRange };
     },
-    requestRealData(start: string, end: string, period: number) {
+    requestRealData(
+      start: string,
+      end: string,
+      period: number
+    ): Promise<ChartData> {
       return new Promise((resolve, reject) => {
         this.$http
           .get(this.$API + `/chart?start=${start}&end=${end}&period=${period}`)
-          .then(real => {
+          .then((real: { data: { data: ChartData } }) => {
             this.loading = false;
             console.log("real:", real);
             console.log("SUCCESS!!");
             resolve(real.data.data);
           })
-          .catch(err => {
+          .catch((err: object) => {
             this.loading = false;
             this.fail = true;
             console.log("FAILURE!!");
@@ -266,19 +274,23 @@ export default Vue.extend({
           });
       });
     },
-    requestPredictData(start: string, end: string, period: number) {
+    requestPredictData(
+      start: string,
+      end: string,
+      period: number
+    ): Promise<ChartData> {
       return new Promise((resolve, reject) => {
         this.$http
           .get(
             this.$API + `/predict?start=${start}&end=${end}&period=${period}`
           )
-          .then(predict => {
+          .then((predict: { data: { data: ChartData } }) => {
             this.loading = false;
             console.log(predict);
             resolve(predict.data.data);
             console.log("SUCCESS!!");
           })
-          .catch(err => {
+          .catch((err: object) => {
             this.loading = false;
             this.fail = true;
             console.log("FAILURE!!");
@@ -287,12 +299,11 @@ export default Vue.extend({
       });
     },
     genLabel(predict: ChartData[]): string[] {
-      let predictDate = predict
+      return predict
         ? predict.map(el => {
             return moment.utc(el.date).format("YYYY-MM-DD");
           })
         : [];
-      return predictDate;
     },
     makeCollection(real: ChartData[], predict: ChartData[]) {
       let dataSets = [];
@@ -322,7 +333,7 @@ export default Vue.extend({
         datasets: dataSets
       };
     },
-    makeTableValue(rawValue: ChartData[]) {
+    makeTableValue(rawValue: ChartData[]): ChartData[] {
       return rawValue.map(el => {
         return { ...el, date: moment.utc(el.date).format("YYYY-MM-DD") };
       });
