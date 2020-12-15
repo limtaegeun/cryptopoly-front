@@ -76,15 +76,22 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import moment from "moment";
 import Vue from "vue";
-import LineChart from "../../components/chart/LineChart";
+import LineChart from "../../components/chart/LineChart.vue";
 import _ from "lodash";
+
+interface ChartData {
+  date: string;
+  open?: number;
+  close: number;
+}
+
 export default Vue.extend({
   name: "OneDayChart",
   components: { LineChart },
-  data: () => ({
+  data () {return {
     dates: [],
     period: 86400,
     sortingDates: [],
@@ -120,8 +127,10 @@ export default Vue.extend({
       { text: "close", value: "close" }
     ],
     actualPrices: [],
-    targetPrices: []
-  }),
+    targetPrices: [],
+    loading: false,
+    fail: false
+  }},
   computed: {
     dateRangeText() {
       return this.sortingDates.join(" ~ ");
@@ -131,7 +140,7 @@ export default Vue.extend({
     dates(newValue) {
       console.log(newValue);
       let sorting = _.cloneDeep(newValue);
-      sorting.sort((a, b) => {
+      sorting.sort((a: string, b: string) => {
         return moment(a).unix() - moment(b).unix();
       });
       this.sortingDates = sorting;
@@ -145,17 +154,20 @@ export default Vue.extend({
     this.refreshData();
   },
   methods: {
-    changeDateSave() {
+    changeDateSave(): void {
       // console.log("change");
       this.$refs.menu.save(this.dates);
       this.currentPreset = "맞춤";
       this.refreshData();
     },
-    setDatesWithSubtract(endDay, subtract) {
+    setDatesWithSubtract(
+      endDay: moment.Moment,
+      subtract: number
+    ): [string, string] {
       const startDay = moment(endDay.toISOString()).subtract(subtract, "days");
       return [startDay.format("YYYY-MM-DD"), endDay.format("YYYY-MM-DD")];
     },
-    selectChange(cur) {
+    selectChange(cur: string): void {
       switch (cur) {
         case "어제": {
           const yest = moment().subtract(1, "days");
@@ -172,7 +184,7 @@ export default Vue.extend({
         }
       }
     },
-    refreshData() {
+    refreshData(): void {
       this.resetChartSize(this.sortingDates, this.period);
       let divide = this.divideDate(this.sortingDates[0], this.sortingDates[1]);
       console.log(divide);
@@ -197,37 +209,46 @@ export default Vue.extend({
         this.targetPrices = this.makeTableValue(value[1]);
       });
     },
-    resetChartSize(dates, period) {
-      let start = moment(dates[0]).unix();
-      let end = moment(dates[1]).unix();
-      let diff = (end - start) / period;
-      let minWidthOfBlock = 1000 / 30;
-      let neededWidth = parseInt(diff * minWidthOfBlock)
+    resetChartSize(dates: string[], period: number) {
+      let start: number = moment(dates[0]).unix();
+      let end: number = moment(dates[1]).unix();
+      let diff: number = (end - start) / period;
+      let minWidthOfBlock: number = 1000 / 30;
+      let neededWidth = Math.round(diff * minWidthOfBlock);
       let windowWidth = window.innerWidth;
       if (Object.prototype.hasOwnProperty.call(this.$refs, "priceChart")) {
         console.log(this.$refs.priceChart);
-        document.querySelector(
+        (document.querySelector(
           "#console-view > div > div > div > div:nth-child(4) > div > div"
-        ).style.width =
-            (windowWidth > neededWidth ? '100%' : neededWidth+ "px");
+        )! as HTMLElement).style.width =
+          windowWidth > neededWidth ? "100%" : neededWidth + "px";
       }
     },
-    divideDate(start, end) {
-      let realRange = [];
-      let predictRange = [];
+    divideDate(
+      start: string,
+      end: string
+    ): { real?: [string, string]; predict?: [string, string] } {
+      let realRange: [string, string] | undefined = undefined;
+      let predictRange: [string, string] | undefined = undefined;
       let now = moment.utc();
-      start = moment.utc(start);
-      end = moment.utc(end);
+      let startOfMoment = moment.utc(start);
+      let endOfMoment = moment.utc(end);
 
-      if (start.unix() < now.unix()) {
-        realRange = [start.format("YYYY-MM-DD"), now.format("YYYY-MM-DD")];
+      if (startOfMoment.unix() < now.unix()) {
+        realRange = [
+          startOfMoment.format("YYYY-MM-DD"),
+          now.format("YYYY-MM-DD")
+        ];
       }
-      if (start.unix() < end.unix()) {
-        predictRange = [start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD")];
+      if (startOfMoment.unix() < endOfMoment.unix()) {
+        predictRange = [
+          startOfMoment.format("YYYY-MM-DD"),
+          endOfMoment.format("YYYY-MM-DD")
+        ];
       }
       return { real: realRange, predict: predictRange };
     },
-    requestRealData(start, end, period) {
+    requestRealData(start: string, end: string, period: number) {
       return new Promise((resolve, reject) => {
         this.$http
           .get(this.$API + `/chart?start=${start}&end=${end}&period=${period}`)
@@ -245,7 +266,7 @@ export default Vue.extend({
           });
       });
     },
-    requestPredictData(start, end, period) {
+    requestPredictData(start: string, end: string, period: number) {
       return new Promise((resolve, reject) => {
         this.$http
           .get(
@@ -265,7 +286,7 @@ export default Vue.extend({
           });
       });
     },
-    genLabel(real, predict) {
+    genLabel(predict: ChartData[]): string[] {
       let predictDate = predict
         ? predict.map(el => {
             return moment.utc(el.date).format("YYYY-MM-DD");
@@ -273,7 +294,7 @@ export default Vue.extend({
         : [];
       return predictDate;
     },
-    makeCollection(real, predict) {
+    makeCollection(real: ChartData[], predict: ChartData[]) {
       let dataSets = [];
       if (real) {
         dataSets.push({
@@ -297,11 +318,11 @@ export default Vue.extend({
         });
       }
       this.chartDataCollection = {
-        labels: this.genLabel(real, predict), // x축 labels
+        labels: this.genLabel(predict), // x축 labels
         datasets: dataSets
       };
     },
-    makeTableValue(rawValue) {
+    makeTableValue(rawValue: ChartData[]) {
       return rawValue.map(el => {
         return { ...el, date: moment.utc(el.date).format("YYYY-MM-DD") };
       });
