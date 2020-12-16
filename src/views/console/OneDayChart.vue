@@ -49,7 +49,7 @@
             ></line-chart>
           </div>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" md="9">
           <!-- data table-->
           <h3 class="mb-2">Actual Price</h3>
           <v-data-table
@@ -60,7 +60,7 @@
             class="elevation-1"
           ></v-data-table>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" md = 3>
           <!-- data table-->
           <h3 class="mb-2">Target Price</h3>
           <v-data-table
@@ -81,11 +81,13 @@ import moment from "moment";
 import Vue from "vue";
 import LineChart from "../../components/chart/LineChart.vue";
 import _ from "lodash";
+import Chart from "@/utils/chart";
 
 interface ChartData {
   date: string;
   open?: number;
   close: number;
+  [prop : string] : any
 }
 
 export default Vue.extend({
@@ -113,11 +115,11 @@ export default Vue.extend({
           align: "left",
           value: "date"
         },
-        { text: "high", value: "high" },
-        { text: "low", value: "low" },
-        { text: "open", value: "open" },
-        { text: "close", value: "close" },
-        { text: "volume", value: "volume" }
+        { text: "high", value: "high", align: "right" },
+        { text: "low", value: "low", align: "right" },
+        { text: "open", value: "open", align: "right" },
+        { text: "close", value: "close", align: "right" },
+        { text: "volume", value: "volume", align: "right" }
       ],
       targetHeaders: [
         {
@@ -125,7 +127,7 @@ export default Vue.extend({
           align: "left",
           value: "date"
         },
-        { text: "close", value: "close" }
+        { text: "close", value: "close", align: "right" }
       ],
       actualPrices: [],
       targetPrices: [],
@@ -258,8 +260,9 @@ export default Vue.extend({
       period: number
     ): Promise<ChartData> {
       return new Promise((resolve, reject) => {
+        let searchStart = moment.unix( moment.utc(start).unix() - period).format('YYYY-MM-DD')
         this.$http
-          .get(this.$API + `/chart?start=${start}&end=${end}&period=${period}`)
+          .get(this.$API + `/chart?start=${searchStart}&end=${end}&period=${period}`)
           .then((real: { data: { data: ChartData } }) => {
             this.loading = false;
             console.log("real:", real);
@@ -280,9 +283,10 @@ export default Vue.extend({
       period: number
     ): Promise<ChartData> {
       return new Promise((resolve, reject) => {
+        let searchStart = moment.unix( moment.utc(start).unix() - period).format('YYYY-MM-DD')
         this.$http
           .get(
-            this.$API + `/predict?start=${start}&end=${end}&period=${period}`
+            this.$API + `/predict?start=${searchStart}&end=${end}&period=${period}`
           )
           .then((predict: { data: { data: ChartData } }) => {
             this.loading = false;
@@ -301,7 +305,7 @@ export default Vue.extend({
     genLabel(predict: ChartData[]): string[] {
       return predict
         ? predict.map(el => {
-            return moment.utc(el.date).format("YYYY-MM-DD");
+            return moment.utc(el.date).add(1,'day').format("YYYY-MM-DD");
           })
         : [];
     },
@@ -335,6 +339,15 @@ export default Vue.extend({
     },
     makeTableValue(rawValue: ChartData[]): ChartData[] {
       return rawValue.map(el => {
+        for (let p in el) {
+          if (p === "date") continue;
+          if (!el[p]) continue;
+          let fractionDigits = 2
+          if( p === 'volume') {
+            fractionDigits = 0
+          }
+          el[p] = Chart.numberWithCommas(Chart.decimalPoint(el[p], 2).toFixed(fractionDigits));
+        }
         return { ...el, date: moment.utc(el.date).format("YYYY-MM-DD") };
       });
     }
