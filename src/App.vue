@@ -14,13 +14,25 @@ export default Vue.extend({
     //
   }),
   beforeMount() {
-    let isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(
-      navigator.userAgent.toLowerCase()
-    );
-    this.setIsMobile(isMobile);
+    this.checkMobile()
+    this.checkLogin()
   },
   methods: {
-    ...mapMutations(["setIsMobile"])
+    ...mapMutations(["setIsMobile", "setUser"]),
+    checkMobile () {
+      let isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(
+          navigator.userAgent.toLowerCase()
+      );
+      this.setIsMobile(isMobile);
+    },
+    checkLogin () {
+      this.$http.get(this.$API + '/user/check', {
+        withCredentials: true
+      }).then(res => {
+        console.log(res.data)
+        this.setUser(res.data.user)
+      })
+    }
   }
 });
 </script>

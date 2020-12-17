@@ -112,6 +112,7 @@ export default Vue.extend({
     ...mapState(["drawer"])
   },
   mounted() {
+    this.title = this.$route.name
     this.onResponsiveInverted();
     window.addEventListener("resize", this.onResponsiveInverted);
   },

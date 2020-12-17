@@ -16,7 +16,7 @@
     name: "ProdictView",
     components: {
       PredictFooter: () => import("@/components/console/Footer")
-    },
+    }
   })
 </script>
 

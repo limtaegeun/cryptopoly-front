@@ -142,7 +142,7 @@ export default Vue.extend({
   },
   watch: {
     dates(newValue) {
-      console.log(newValue);
+      // console.log(newValue);
       let sorting = _.cloneDeep(newValue);
       sorting.sort((a: string, b: string) => {
         return moment(a).unix() - moment(b).unix();
@@ -191,7 +191,7 @@ export default Vue.extend({
     refreshData(): void {
       this.resetChartSize(this.sortingDates, this.period);
       let divide = this.divideDate(this.sortingDates[0], this.sortingDates[1]);
-      console.log(divide);
+      // console.log(divide);
       let asyncArray = [];
       if (divide.real.length) {
         asyncArray.push(
@@ -265,8 +265,8 @@ export default Vue.extend({
           .get(this.$API + `/chart?start=${searchStart}&end=${end}&period=${period}`)
           .then((real: { data: { data: ChartData } }) => {
             this.loading = false;
-            console.log("real:", real);
-            console.log("SUCCESS!!");
+            // console.log("real:", real);
+            // console.log("SUCCESS!!");
             resolve(real.data.data);
           })
           .catch((err: object) => {
@@ -290,9 +290,9 @@ export default Vue.extend({
           )
           .then((predict: { data: { data: ChartData } }) => {
             this.loading = false;
-            console.log(predict);
+            // console.log(predict);
             resolve(predict.data.data);
-            console.log("SUCCESS!!");
+            // console.log("SUCCESS!!");
           })
           .catch((err: object) => {
             this.loading = false;
@@ -340,8 +340,8 @@ export default Vue.extend({
     makeTableValue(rawValue: ChartData[]): ChartData[] {
       return rawValue.map(el => {
         for (let p in el) {
-          if (p === "date") continue;
           if (!el[p]) continue;
+          if (p === "date") continue;
           let fractionDigits = 2
           if( p === 'volume') {
             fractionDigits = 0

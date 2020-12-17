@@ -77,7 +77,9 @@ export default {
         password: this.pwd
       };
       this.$http
-        .post(this.$API + "/user/login", data)
+        .post(this.$API + "/user/login", data, {
+          withCredentials: true
+        })
         .then(res => {
           this.loading = false;
           console.log(res);
