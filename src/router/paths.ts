@@ -2,6 +2,7 @@ const Home = () => import("../views/Home.vue");
 
 const Main = () => import("../views/Main.vue");
 const SignUp = () => import("../views/user/SignUp.vue");
+const SignUpComplete = () => import("../views/user/SignUpComplete.vue");
 const Login = () => import("../views/user/Login.vue");
 const Forget = () => import("../views/user/ForgetPwd.vue");
 const Reset = () => import("../views/user/ResetPassword.vue");
@@ -46,6 +47,10 @@ export default [
         component: SignUp
       },
       {
+        path: '/signupcomplete/:username',
+        component: SignUpComplete
+      },
+      {
         path: "/login",
         component: Login
       },
@@ -62,18 +67,20 @@ export default [
   {
     path: "/console",
     name: "Predict",
-    redirect: '/console/dashboard',
+    redirect: "/console/dashboard",
     component: Base,
     children: [
       {
         path: "dashboard",
         name: "Dashboard",
         component: Dashboard
-      },{
+      },
+      {
         path: "1d/:code",
         name: "Target Price Chart (1Day)",
         component: OneDayChart
-      },{
+      },
+      {
         path: "30min/:code",
         name: "Target Price Chart (30Min)",
         component: HalfHourChart

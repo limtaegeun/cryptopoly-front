@@ -48,26 +48,32 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+import {User} from '@/declaration/interfaces'
+import {mapMutations} from "vuex";
+export default Vue.extend({
   name: "SignIn",
-  data: () => ({
-    valid: true,
-    email: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-    ],
-    pwd: "",
-    pwdShow: false,
-    pwdRules: [v => !!v || "Password is required"],
-    lazy: false,
-    loading: false,
-    fail: false,
-    errMsg: "Login failed"
-  }),
+  data(): any {
+    return {
+      valid: true,
+      email: "",
+      emailRules: [
+        (v: string) => !!v || "E-mail is required",
+        (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      ],
+      pwd: "",
+      pwdShow: false,
+      pwdRules: [(v: string) => !!v || "Password is required"],
+      lazy: false,
+      loading: false,
+      fail: false,
+      errMsg: "Login failed"
+    };
+  },
   methods: {
-    login() {
+    ...mapMutations(["setUser"]),
+    login(): void {
       this.$refs.form.validate();
       if (!this.valid) {
         return;
@@ -80,9 +86,10 @@ export default {
         .post(this.$API + "/user/login", data, {
           withCredentials: true
         })
-        .then(res => {
+        .then((res : {data: User }) => {
           this.loading = false;
           console.log(res);
+          this.setUser(res.data.user)
           location.href = "http://localhost:8080/console";
           console.log("success");
         })
@@ -93,7 +100,7 @@ export default {
         });
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

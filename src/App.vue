@@ -56,7 +56,7 @@ p {
   font-family: "Noto Sans KR", "Roboto", sans-serif;
 }
 a {
-  color: #111111;
+  color: #111111 !important;
   text-decoration: none;
 }
 button:hover {
@@ -85,5 +85,7 @@ button:focus {
   border-radius: 8px;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.08), -2px -2px 4px 0px #fff;
   background-color: #f2f4f8;
+  padding: 5px 15px;
 }
+
 </style>

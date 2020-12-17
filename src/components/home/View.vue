@@ -20,7 +20,8 @@
 
 <style scoped lang="scss">
   #core-view {
-    padding-bottom: 100px;
+    padding-bottom: 82px;
     background-color: #f2f4f8;
+    min-height: calc(100vh - 44px);
   }
 </style>

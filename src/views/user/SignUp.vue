@@ -67,8 +67,12 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+import {User} from '@/declaration/interfaces'
+import {mapMutations} from "vuex";
+
+export default Vue.extend({
   name: "SignUp",
   data: () => ({
     valid: true,
@@ -91,9 +95,7 @@ export default {
         "Use at least 9 characters in combination of uppercase, lowercase, numbers, and symbols"
     ],
     confirmPwd: "",
-    confirmRules: [
-      v => !!v || "Confirm password is required"
-    ],
+    confirmRules: [v => !!v || "Confirm password is required"],
     select: null,
     checkbox: false,
     lazy: false,
@@ -125,8 +127,10 @@ export default {
       };
       this.$http
         .post(this.$API + "/user/signup", data)
-        .then(() => {
+        .then((res: { data: {user: User} }) => {
           this.loading = false;
+          this.$router.push({path: 'signupcomplete/' + data.username})
+          // console.log(res)
           // console.log("SUCCESS!!");
         })
         .catch(err => {
@@ -147,7 +151,7 @@ export default {
       this.$refs.form.resetValidation();
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
