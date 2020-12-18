@@ -86,14 +86,14 @@ export default Vue.extend({
         .post(this.$API + "/user/login", data, {
           withCredentials: true
         })
-        .then((res : {data: User }) => {
+        .then((res : {data: {user : User} }) => {
           this.loading = false;
           console.log(res);
           this.setUser(res.data.user)
           location.href = "http://localhost:8080/console";
           console.log("success");
         })
-        .catch(err => {
+        .catch((err : any) => {
           this.loading = false;
           this.fail = true;
           console.log(err.response);

@@ -9,7 +9,7 @@
             <v-icon small>mdi-check</v-icon> {{ text }}
           </p>
 
-          <v-btn class="plan-btn" outlined color="#c48c34">
+          <v-btn class="plan-btn" outlined color="#c48c34" @click="startService">
             Start free trial
           </v-btn>
         </div>
@@ -33,12 +33,21 @@ export default Vue.extend({
       {
         name: "Pro",
         price: "$10",
-        contents: ["Basic content included", "AI price prediction"]
+        contents: ["Basic content included", "AI target price prediction"]
       }
     ]
   }),
   computed: {
     ...mapState(["user"])
+  },
+  methods : {
+    startService() {
+      if (this.user) {
+        this.$router.push('console/myprofile/profile')
+      } else {
+        this.$router.push('signup')
+      }
+    }
   }
 });
 </script>

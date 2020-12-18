@@ -6,7 +6,7 @@
           <p>Hi! {{$route.params.username}} 👋 <br>Congratulations on the start of your smart investment.</p>
           <div class="actions">
             <router-link to="/login">
-              <button class="convex-btn rignt-down" >Login</button>
+              <v-btn outlined block>Login</v-btn>
             </router-link>
 
           </div>

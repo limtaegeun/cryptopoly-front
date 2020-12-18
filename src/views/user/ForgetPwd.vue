@@ -66,7 +66,7 @@ export default {
         .then(res => {
           this.loading = false;
           console.log(res);
-          location.href = "http://localhost:8080/predict";
+          location.href = "http://localhost:8080/";
           console.log("success");
         })
         .catch(err => {

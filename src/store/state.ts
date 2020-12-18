@@ -4,4 +4,5 @@ export default {
   drawer: null,
   isMobile: false,
   user: null
+
 };
