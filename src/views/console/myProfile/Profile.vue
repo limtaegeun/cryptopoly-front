@@ -7,10 +7,22 @@
       disabled
       color="#c48c34"
     ></v-text-field>
-    <v-text-field label="username" v-model="username" color="#c48c34">
+    <v-text-field
+      label="username"
+      v-model="username"
+      color="#c48c34"
+      :rules="usernameRules"
+    >
       <template v-slot:append>
         <v-fade-transition>
-          <v-btn v-show="isEditUsername" text small color="#c48c34">Save</v-btn>
+          <v-btn
+            v-show="isEditUsername"
+            text
+            small
+            color="#c48c34"
+            @click="changeUsername"
+            >Save</v-btn
+          >
         </v-fade-transition>
       </template>
     </v-text-field>
@@ -45,7 +57,6 @@
         :type="pwdShow ? 'text' : 'password'"
         @click:append="pwdShow = !pwdShow"
         color="#c48c34"
-        required
       ></v-text-field>
       <v-text-field
         label="new password"
@@ -57,7 +68,6 @@
         :type="pwdShow ? 'text' : 'password'"
         @click:append="pwdShow = !pwdShow"
         color="#c48c34"
-        required
       ></v-text-field>
       <v-text-field
         label="confirm password"
@@ -67,7 +77,6 @@
         :append-icon="pwdShow ? 'mdi-eye' : 'mdi-eye-off'"
         :type="pwdShow ? 'text' : 'password'"
         @click:append="pwdShow = !pwdShow"
-        required
       ></v-text-field>
     </v-form>
     <v-row>
@@ -86,18 +95,10 @@
         <v-icon dark>mdi-close-outline</v-icon>
       </v-btn>
     </v-snackbar>
-    <v-snackbar
-        v-model="success"
-        color="success"
-    >
+    <v-snackbar v-model="success" color="success">
       {{ successMsg }}
       <template v-slot:action="{ attrs }">
-        <v-btn
-            color="white"
-            text
-            v-bind="attrs"
-            @click="success = false"
-        >
+        <v-btn color="white" text v-bind="attrs" @click="success = false">
           Close
         </v-btn>
       </template>
@@ -114,6 +115,11 @@ export default Vue.extend({
   data: () => ({
     valid: true,
     username: "",
+    usernameRules: [
+      (v: string) => !!v || "Username is required",
+      (v: string) =>
+        (v && v.length <= 10) || "Name must be less than 10 characters"
+    ],
     password: "",
     newPassword: "",
     confirmPassword: "",
@@ -132,7 +138,7 @@ export default Vue.extend({
     lazy: false,
     errMsg: "failed",
     success: false,
-    successMsg: 'You have changed your password.'
+    successMsg: "You have changed your password."
   }),
   beforeMount() {
     this.username = this.user.username;
@@ -140,12 +146,26 @@ export default Vue.extend({
   computed: {
     ...mapState(["user"]),
     isEditUsername() {
-      return this.user.username !== this.username;
+      return this.user.username !== this.username && this.username !== "";
     }
   },
   methods: {
     changeUsername() {
-      //
+      this.loading = true;
+      this.$http
+        .post(
+          this.$API + "/user/edit",
+          { username: this.username },
+          { withCredentials: true }
+        )
+        .then(() => {
+          this.loading = false;
+          this.success = true;
+        })
+        .catch(() => {
+          this.loading = false;
+          this.fail = true;
+        });
     },
     changePassword() {
       (this.$refs.changePwdForm as HTMLFormElement).validate();
@@ -164,11 +184,11 @@ export default Vue.extend({
       this.loading = true;
       this.$http
         .post(this.$API + "/user/changepwd", data, { withCredentials: true })
-        .then(res => {
+        .then(() => {
           this.loading = false;
-          this.success = true
-          this.password = ''
-          this.newPassword = ''
+          this.success = true;
+          this.password = "";
+          this.newPassword = "";
         })
         .catch(err => {
           this.loading = false;
