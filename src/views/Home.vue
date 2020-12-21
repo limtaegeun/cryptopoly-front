@@ -1,9 +1,9 @@
 <template>
-  <v-app>
+  <div id="home">
     <core-app-bar></core-app-bar>
     <core-view></core-view>
-    <core-footer></core-footer>
-  </v-app>
+
+  </div>
 </template>
 
 <script lang="ts">
@@ -13,7 +13,7 @@ export default Vue.extend({
   components: {
     CoreView: () => import("@/components/home/View.vue"),
     CoreAppBar: () => import("@/components/home/AppBar.vue"),
-    CoreFooter: () => import("@/components/home/Footer.vue")
+
   },
   data: () => ({
     //
@@ -21,6 +21,8 @@ export default Vue.extend({
 });
 </script>
 <style scoped lang="scss">
-.home {
+#home {
+  height: 100vh;
+  overflow-y: auto;
 }
 </style>

@@ -33,7 +33,8 @@
             <p>
               Thank you! <br />
               If the email address exists in our system, an email with the reset
-              link has been sent.
+              link has been sent.<br>
+              The authentication token is valid for 5 minutes.
             </p>
           </v-card-text>
           <v-card-actions>

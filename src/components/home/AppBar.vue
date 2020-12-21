@@ -1,11 +1,11 @@
 <template>
   <v-app-bar
-    absolute
     app
-    height="44"
+    absolute
+    elevate-on-scroll
+    scroll-target="#home"
     class="home-app-bar"
-    dense
-    flat
+
     color="#f2f4f8"
   >
     <router-link to="/">
@@ -66,9 +66,9 @@ export default Vue.extend({
     },
     startService() {
       if (this.user) {
-        this.$router.push('console')
+        this.$router.push("console");
       } else {
-        this.$router.push('signup')
+        this.$router.push("signup");
       }
     }
   }

@@ -18,7 +18,7 @@
     </template>
 
     <v-list-item two-line>
-      <v-list-item-title class="logo">
+      <v-list-item-title class="logo-btn">
         Cryptopoly
       </v-list-item-title>
     </v-list-item>
@@ -119,7 +119,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-.logo {
+.logo-btn {
   font-family: "Comfortaa", sans-serif;
   text-decoration: none;
   font-size: 23px;

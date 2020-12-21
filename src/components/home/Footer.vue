@@ -1,6 +1,6 @@
 <template>
   <v-footer id="core-footer" absolute height="82">
-    <div class="footer-items">
+    <div class="logo">
       Cryptopoly
     </div>
     <v-spacer />

@@ -24,7 +24,9 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <a href="/forget" class="link">Forgot your password?</a>
+            <router-link to="/forget">
+              <p class="link">Forgot your password?</p>
+            </router-link>
             <v-spacer></v-spacer>
             <v-btn
               :disabled="!valid"
@@ -90,7 +92,7 @@ export default Vue.extend({
           this.loading = false;
           console.log(res);
           this.setUser(res.data.user)
-          location.href = "http://localhost:8080/console";
+          this.$router.push('console')
           console.log("success");
         })
         .catch((err : any) => {
@@ -122,5 +124,6 @@ export default Vue.extend({
   margin-left: 10px;
   color: #111111;
   font-size: 11pt;
+  text-decoration-line: underline;
 }
 </style>

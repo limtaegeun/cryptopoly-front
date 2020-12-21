@@ -37,6 +37,7 @@ export default Vue.extend({
 });
 </script>
 <style lang="scss">
+
 .keyColor {
   color: #f9bc53;
 }
@@ -45,6 +46,9 @@ export default Vue.extend({
 }
 .background {
   background-color: #f2f4f8;
+}
+html {
+  overflow: hidden !important;
 }
 h1,
 h2,
@@ -67,7 +71,9 @@ button:focus {
   outline: none;
   border: none;
 }
-
+.logo {
+  font-family: "Comfortaa", sans-serif;
+}
 .convex-card {
   border-radius: 8px;
   box-shadow: 8px 8px 16px 0px rgba(0, 0, 0, 0.06), -8px -8px 16px 0px #fff;
