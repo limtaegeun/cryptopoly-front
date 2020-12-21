@@ -2,7 +2,7 @@
   <div class="forget-password-view">
     <v-container class="container">
       <v-row class="row-wrapper" align="center" justify="center">
-        <v-card class="forget-password-card" raised tile :loading="loading">
+        <v-card v-if="!isSentEmail" class="forget-password-card" raised tile :loading="loading">
           <v-card-title class="headline">Forget Password</v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="valid" :lazy-validation="lazy">
@@ -18,12 +18,27 @@
             <v-spacer></v-spacer>
             <v-btn
               :disabled="!valid"
-              color="success"
+              color="#c48c34"
               class="mr-4"
               @click="submit"
+              outlined
             >
-              login
+              Email me a rest link
             </v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-card v-else class="reset-password-card" raised tile>
+          <v-card-title class="headline">Reset Your Password</v-card-title>
+          <v-card-text>
+            <p>
+              Thank you! <br />
+              If the email address exists in our system, an email with the reset
+              link has been sent.
+            </p>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn outlined color="#c48c34" @click="goToLogin">Go to login</v-btn>
           </v-card-actions>
         </v-card>
       </v-row>
@@ -50,7 +65,8 @@ export default {
     lazy: false,
     loading: false,
     fail: false,
-    errMsg: "Sign up failed"
+    errMsg: "Sign up failed",
+    isSentEmail : false
   }),
   methods: {
     submit() {
@@ -61,12 +77,13 @@ export default {
       let data = {
         email: this.email
       };
+      this.loading = true;
       this.$http
         .post(this.$API + "/forget/auth", data)
         .then(res => {
           this.loading = false;
           console.log(res);
-          location.href = "http://localhost:8080/";
+          this.isSentEmail = true
           console.log("success");
         })
         .catch(err => {
@@ -74,6 +91,9 @@ export default {
           this.fail = true;
           console.log(err.response);
         });
+    },
+    goToLogin () {
+      this.$router.push('login')
     }
   }
 };
