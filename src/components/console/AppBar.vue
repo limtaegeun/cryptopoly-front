@@ -3,14 +3,15 @@
     id="predict-app-bar"
     absolute
     app
-    color="transparent"
-    flat
-    height="88"
+    color="#eee"
+    elevate-on-scroll
+    scroll-target="#console-content-view"
+    height="60"
   >
     <v-btn
       v-if="!responsive"
       class="mr-3"
-      elevation="1"
+      elevation="0"
       fab
       small
       @click="setDrawer(!drawer)"

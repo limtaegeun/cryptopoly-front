@@ -13,7 +13,6 @@ export default Vue.extend({
   components: {
     CoreView: () => import("@/components/home/View.vue"),
     CoreAppBar: () => import("@/components/home/AppBar.vue"),
-
   },
   data: () => ({
     //

@@ -76,12 +76,12 @@ export default [
         component: Dashboard
       },
       {
-        path: "1d/:code",
+        path: "1d/:pairId",
         name: "Target Price Chart (1Day)",
         component: OneDayChart
       },
       {
-        path: "30min/:code",
+        path: "30min/:pairId",
         name: "Target Price Chart (30Min)",
         component: HalfHourChart
       },

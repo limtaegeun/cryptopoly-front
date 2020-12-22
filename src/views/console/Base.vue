@@ -1,9 +1,10 @@
 <template>
-  <v-app>
+  <div id="console-base">
     <predict-app-bar />
     <predict-drawer />
     <predict-view />
-  </v-app>
+  </div>
+
 </template>
 
 <script>
@@ -20,4 +21,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+#console-base {
+  height: 100%;
+}
+</style>

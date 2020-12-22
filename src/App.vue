@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <v-app>
     <router-view></router-view>
-  </div>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -39,7 +39,7 @@ export default Vue.extend({
 <style lang="scss">
 
 .keyColor {
-  color: #f9bc53;
+  color: #f0bd65;
 }
 .dark-key {
   color: #c48c34;

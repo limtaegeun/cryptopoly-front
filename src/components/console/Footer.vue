@@ -1,5 +1,5 @@
 <template>
-  <v-footer id="cpredict-footer" absolute height="82">
+  <v-footer id="cpredict-footer" height="82" color="#eee">
     <div class="logo">
       Cryptopoly
     </div>

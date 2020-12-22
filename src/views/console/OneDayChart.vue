@@ -192,17 +192,18 @@ export default Vue.extend({
       this.resetChartSize(this.sortingDates, this.period);
       let divide = this.divideDate(this.sortingDates[0], this.sortingDates[1]);
       // console.log(divide);
+      let pairId = this.$route.params.pairId
       let asyncArray = [];
       if (divide.real.length) {
         asyncArray.push(
-          this.requestRealData(divide.real[0], divide.real[1], 86400)
+          this.requestRealData(divide.real[0], divide.real[1], 86400, pairId)
         );
       } else {
         asyncArray.push(null);
       }
       if (divide.predict.length) {
         asyncArray.push(
-          this.requestPredictData(divide.predict[0], divide.predict[1], 86400)
+          this.requestPredictData(divide.predict[0], divide.predict[1], 86400, pairId)
         );
       } else {
         asyncArray.push(null);
@@ -257,12 +258,13 @@ export default Vue.extend({
     requestRealData(
       start: string,
       end: string,
-      period: number
+      period: number,
+      pairId: number
     ): Promise<ChartData> {
       return new Promise((resolve, reject) => {
         let searchStart = moment.unix( moment.utc(start).unix() - period).format('YYYY-MM-DD')
         this.$http
-          .get(this.$API + `/chart?start=${searchStart}&end=${end}&period=${period}`)
+          .get(this.$API + `/chart?start=${searchStart}&end=${end}&period=${period}&pairId=${pairId}`)
           .then((real: { data: { data: ChartData } }) => {
             this.loading = false;
             // console.log("real:", real);
@@ -280,13 +282,14 @@ export default Vue.extend({
     requestPredictData(
       start: string,
       end: string,
-      period: number
+      period: number,
+      pairId : number
     ): Promise<ChartData> {
       return new Promise((resolve, reject) => {
         let searchStart = moment.unix( moment.utc(start).unix() - period).format('YYYY-MM-DD')
         this.$http
           .get(
-            this.$API + `/predict?start=${searchStart}&end=${end}&period=${period}`
+            this.$API + `/predict?start=${searchStart}&end=${end}&period=${period}&pairId=${pairId}`
           )
           .then((predict: { data: { data: ChartData } }) => {
             this.loading = false;
@@ -314,7 +317,7 @@ export default Vue.extend({
       if (real) {
         dataSets.push({
           label: "actual", // data 이름
-          borderColor: "#f87979",
+          borderColor: "#e53935",
           backgroundColor: "rgba(0,0,0,0)",
           data: real.map(el => {
             return el.close;
@@ -324,9 +327,8 @@ export default Vue.extend({
       if (predict) {
         dataSets.push({
           label: "target", // data 이름
-          borderColor: "#f8f413",
+          borderColor: "#f0bd65",
           backgroundColor: "rgba(0,0,0,0)",
-
           data: predict.map(el => {
             return el.close;
           })

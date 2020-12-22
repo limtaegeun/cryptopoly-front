@@ -17,7 +17,7 @@
             <v-icon small color="#f0bd66">mdi-check</v-icon> Cryptocurrency
             real-time keyword analysis
           </p>
-          <button class="convex-card">Start free trial</button>
+          <button class="convex-card" @click="startService">Start free trial</button>
         </v-col>
         <v-col :cols="undefined"></v-col>
         <v-col cols="11" sm="5">
@@ -31,7 +31,16 @@
 <script>
 import Vue from "vue";
 export default Vue.extend({
-  name: "StartBanner"
+  name: "StartBanner",
+  methods: {
+    startService() {
+      if (this.user) {
+        this.$router.push("console");
+      } else {
+        this.$router.push("signup");
+      }
+    }
+  }
 });
 </script>
 

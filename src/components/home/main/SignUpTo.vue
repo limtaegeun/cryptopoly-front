@@ -18,7 +18,7 @@
             <p>
               <v-icon small color="#f0bd66">mdi-check</v-icon> Keyword analysis
             </p>
-            <button class="convex-card">Start free trial</button>
+            <button class="convex-card" @click="startService">Start free trial</button>
           </div>
         </v-col>
         <v-col :cols="undefined"></v-col>
@@ -31,12 +31,22 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {mapState} from "vuex";
 
 export default Vue.extend({
   name: "SignUpTo",
-  data: () => ({
-    //
-  })
+  computed: {
+    ...mapState(['user'])
+  },
+  methods : {
+    startService() {
+      if (this.user) {
+        this.$router.push("console");
+      } else {
+        this.$router.push("signup");
+      }
+    }
+  }
 });
 </script>
 
