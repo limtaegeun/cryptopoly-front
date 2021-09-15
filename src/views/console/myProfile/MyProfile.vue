@@ -60,11 +60,9 @@ export default Vue.extend({
 }
 .left-flex-item {
   flex: 0 0 300px;
-  border: solid 1px red;
 }
 .right-flex-item {
   flex: 1 1;
-  border: solid 1px blue;
 }
 .my-profile-drawer {
   margin-left: 20px;

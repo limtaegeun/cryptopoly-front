@@ -49,7 +49,7 @@
             ></line-chart>
           </div>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" md="9">
           <!-- data table-->
           <h3 class="mb-2">Actual Price</h3>
           <v-data-table
@@ -60,7 +60,7 @@
             class="elevation-1"
           ></v-data-table>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" md = 3>
           <!-- data table-->
           <h3 class="mb-2">Target Price</h3>
           <v-data-table
@@ -76,62 +76,75 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import moment from "moment";
 import Vue from "vue";
-import LineChart from "../../components/chart/LineChart";
+import LineChart from "../../components/chart/LineChart.vue";
 import _ from "lodash";
+import Chart from "@/utils/chart";
+
+interface ChartData {
+  date: string;
+  open?: number;
+  close: number;
+  [prop : string] : any
+}
+
 export default Vue.extend({
   name: "OneDayChart",
   components: { LineChart },
-  data: () => ({
-    dates: [],
-    period: 86400,
-    sortingDates: [],
-    menu: false,
-    tableLoading: true,
-    snackbar: false,
-    datePreset: ["어제", "최근 7일", "지난 30일", "맞춤"],
-    currentPreset: "최근 7일",
-    // for chart.js
-    chartDataCollection: {},
-    chartOptions: {
-      maintainAspectRatio: false
-    },
-    // for table
-    actualHeaders: [
-      {
-        text: "date",
-        align: "left",
-        value: "date"
+  data(): any {
+    return {
+      dates: [],
+      period: 86400,
+      sortingDates: [],
+      menu: false,
+      tableLoading: true,
+      snackbar: false,
+      datePreset: ["어제", "최근 7일", "지난 30일", "맞춤"],
+      currentPreset: "최근 7일",
+      // for chart.js
+      chartDataCollection: {},
+      chartOptions: {
+        maintainAspectRatio: false
       },
-      { text: "high", value: "high" },
-      { text: "low", value: "low" },
-      { text: "open", value: "open" },
-      { text: "close", value: "close" },
-      { text: "volume", value: "volume" }
-    ],
-    targetHeaders: [
-      {
-        text: "date",
-        align: "left",
-        value: "date"
-      },
-      { text: "close", value: "close" }
-    ],
-    actualPrices: [],
-    targetPrices: []
-  }),
+      // for table
+      actualHeaders: [
+        {
+          text: "date",
+          align: "left",
+          value: "date"
+        },
+        { text: "high", value: "high", align: "right" },
+        { text: "low", value: "low", align: "right" },
+        { text: "open", value: "open", align: "right" },
+        { text: "close", value: "close", align: "right" },
+        { text: "volume", value: "volume", align: "right" }
+      ],
+      targetHeaders: [
+        {
+          text: "date",
+          align: "left",
+          value: "date"
+        },
+        { text: "close", value: "close", align: "right" }
+      ],
+      actualPrices: [],
+      targetPrices: [],
+      loading: false,
+      fail: false
+    };
+  },
   computed: {
-    dateRangeText() {
+    dateRangeText(): string {
       return this.sortingDates.join(" ~ ");
     }
   },
   watch: {
     dates(newValue) {
-      console.log(newValue);
+      // console.log(newValue);
       let sorting = _.cloneDeep(newValue);
-      sorting.sort((a, b) => {
+      sorting.sort((a: string, b: string) => {
         return moment(a).unix() - moment(b).unix();
       });
       this.sortingDates = sorting;
@@ -145,17 +158,20 @@ export default Vue.extend({
     this.refreshData();
   },
   methods: {
-    changeDateSave() {
+    changeDateSave(): void {
       // console.log("change");
       this.$refs.menu.save(this.dates);
       this.currentPreset = "맞춤";
       this.refreshData();
     },
-    setDatesWithSubtract(endDay, subtract) {
+    setDatesWithSubtract(
+      endDay: moment.Moment,
+      subtract: number
+    ): [string, string] {
       const startDay = moment(endDay.toISOString()).subtract(subtract, "days");
       return [startDay.format("YYYY-MM-DD"), endDay.format("YYYY-MM-DD")];
     },
-    selectChange(cur) {
+    selectChange(cur: string): void {
       switch (cur) {
         case "어제": {
           const yest = moment().subtract(1, "days");
@@ -172,21 +188,22 @@ export default Vue.extend({
         }
       }
     },
-    refreshData() {
+    refreshData(): void {
       this.resetChartSize(this.sortingDates, this.period);
       let divide = this.divideDate(this.sortingDates[0], this.sortingDates[1]);
-      console.log(divide);
+      // console.log(divide);
+      let pairId = this.$route.params.pairId
       let asyncArray = [];
       if (divide.real.length) {
         asyncArray.push(
-          this.requestRealData(divide.real[0], divide.real[1], 86400)
+          this.requestRealData(divide.real[0], divide.real[1], 86400, pairId)
         );
       } else {
         asyncArray.push(null);
       }
       if (divide.predict.length) {
         asyncArray.push(
-          this.requestPredictData(divide.predict[0], divide.predict[1], 86400)
+          this.requestPredictData(divide.predict[0], divide.predict[1], 86400, pairId)
         );
       } else {
         asyncArray.push(null);
@@ -197,47 +214,64 @@ export default Vue.extend({
         this.targetPrices = this.makeTableValue(value[1]);
       });
     },
-    resetChartSize(dates, period) {
-      let start = moment(dates[0]).unix();
-      let end = moment(dates[1]).unix();
-      let diff = (end - start) / period;
-      let minWidthOfBlock = 1000 / 30;
-      let neededWidth = parseInt(diff * minWidthOfBlock)
+    resetChartSize(dates: string[], period: number) {
+      let start: number = moment(dates[0]).unix();
+      let end: number = moment(dates[1]).unix();
+      let diff: number = (end - start) / period;
+      let minWidthOfBlock: number = 1000 / 30;
+      let neededWidth = Math.round(diff * minWidthOfBlock);
       let windowWidth = window.innerWidth;
       if (Object.prototype.hasOwnProperty.call(this.$refs, "priceChart")) {
-        console.log(this.$refs.priceChart);
-        document.querySelector(
+        let chartEl = document.querySelector(
           "#console-view > div > div > div > div:nth-child(4) > div > div"
-        ).style.width =
-            (windowWidth > neededWidth ? '100%' : neededWidth+ "px");
+        ) as HTMLElement;
+        if (chartEl) {
+          chartEl.style.width =
+            windowWidth > neededWidth ? "100%" : neededWidth + "px";
+        }
       }
     },
-    divideDate(start, end) {
-      let realRange = [];
-      let predictRange = [];
+    divideDate(
+      start: string,
+      end: string
+    ): { real?: [string, string]; predict?: [string, string] } {
+      let realRange: [string, string] | undefined = undefined;
+      let predictRange: [string, string] | undefined = undefined;
       let now = moment.utc();
-      start = moment.utc(start);
-      end = moment.utc(end);
+      let startOfMoment = moment.utc(start);
+      let endOfMoment = moment.utc(end);
 
-      if (start.unix() < now.unix()) {
-        realRange = [start.format("YYYY-MM-DD"), now.format("YYYY-MM-DD")];
+      if (startOfMoment.unix() < now.unix()) {
+        realRange = [
+          startOfMoment.format("YYYY-MM-DD"),
+          now.format("YYYY-MM-DD")
+        ];
       }
-      if (start.unix() < end.unix()) {
-        predictRange = [start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD")];
+      if (startOfMoment.unix() < endOfMoment.unix()) {
+        predictRange = [
+          startOfMoment.format("YYYY-MM-DD"),
+          endOfMoment.format("YYYY-MM-DD")
+        ];
       }
       return { real: realRange, predict: predictRange };
     },
-    requestRealData(start, end, period) {
+    requestRealData(
+      start: string,
+      end: string,
+      period: number,
+      pairId: number
+    ): Promise<ChartData> {
       return new Promise((resolve, reject) => {
+        let searchStart = moment.unix( moment.utc(start).unix() - period).format('YYYY-MM-DD')
         this.$http
-          .get(this.$API + `/chart?start=${start}&end=${end}&period=${period}`)
-          .then(real => {
+          .get(this.$API + `/chart?start=${searchStart}&end=${end}&period=${period}&pairId=${pairId}`)
+          .then((real: { data: { data: ChartData } }) => {
             this.loading = false;
-            console.log("real:", real);
-            console.log("SUCCESS!!");
+            // console.log("real:", real);
+            // console.log("SUCCESS!!");
             resolve(real.data.data);
           })
-          .catch(err => {
+          .catch((err: object) => {
             this.loading = false;
             this.fail = true;
             console.log("FAILURE!!");
@@ -245,19 +279,25 @@ export default Vue.extend({
           });
       });
     },
-    requestPredictData(start, end, period) {
+    requestPredictData(
+      start: string,
+      end: string,
+      period: number,
+      pairId : number
+    ): Promise<ChartData> {
       return new Promise((resolve, reject) => {
+        let searchStart = moment.unix( moment.utc(start).unix() - period).format('YYYY-MM-DD')
         this.$http
           .get(
-            this.$API + `/predict?start=${start}&end=${end}&period=${period}`
+            this.$API + `/predict?start=${searchStart}&end=${end}&period=${period}&pairId=${pairId}`
           )
-          .then(predict => {
+          .then((predict: { data: { data: ChartData } }) => {
             this.loading = false;
-            console.log(predict);
+            // console.log(predict);
             resolve(predict.data.data);
-            console.log("SUCCESS!!");
+            // console.log("SUCCESS!!");
           })
-          .catch(err => {
+          .catch((err: object) => {
             this.loading = false;
             this.fail = true;
             console.log("FAILURE!!");
@@ -265,20 +305,19 @@ export default Vue.extend({
           });
       });
     },
-    genLabel(real, predict) {
-      let predictDate = predict
+    genLabel(predict: ChartData[]): string[] {
+      return predict
         ? predict.map(el => {
-            return moment.utc(el.date).format("YYYY-MM-DD");
+            return moment.utc(el.date).add(1,'day').format("YYYY-MM-DD");
           })
         : [];
-      return predictDate;
     },
-    makeCollection(real, predict) {
+    makeCollection(real: ChartData[], predict: ChartData[]) {
       let dataSets = [];
       if (real) {
         dataSets.push({
           label: "actual", // data 이름
-          borderColor: "#f87979",
+          borderColor: "#e53935",
           backgroundColor: "rgba(0,0,0,0)",
           data: real.map(el => {
             return el.close;
@@ -288,21 +327,29 @@ export default Vue.extend({
       if (predict) {
         dataSets.push({
           label: "target", // data 이름
-          borderColor: "#f8f413",
+          borderColor: "#f0bd65",
           backgroundColor: "rgba(0,0,0,0)",
-
           data: predict.map(el => {
             return el.close;
           })
         });
       }
       this.chartDataCollection = {
-        labels: this.genLabel(real, predict), // x축 labels
+        labels: this.genLabel(predict), // x축 labels
         datasets: dataSets
       };
     },
-    makeTableValue(rawValue) {
+    makeTableValue(rawValue: ChartData[]): ChartData[] {
       return rawValue.map(el => {
+        for (let p in el) {
+          if (!el[p]) continue;
+          if (p === "date") continue;
+          let fractionDigits = 2
+          if( p === 'volume') {
+            fractionDigits = 0
+          }
+          el[p] = Chart.numberWithCommas(Chart.decimalPoint(el[p], 2).toFixed(fractionDigits));
+        }
         return { ...el, date: moment.utc(el.date).format("YYYY-MM-DD") };
       });
     }

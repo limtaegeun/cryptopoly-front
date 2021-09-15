@@ -2,7 +2,7 @@
   <div class="reset-password-view">
     <v-container class="container">
       <v-row class="row-wrapper" align="center" justify="center">
-        <v-card class="reset-password-card" raised tile :loading="loading">
+        <v-card v-if="!isResetPwd" class="reset-password-card" raised tile :loading="loading">
           <v-card-title class="headline">Forget Password</v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="valid" :lazy-validation="lazy">
@@ -38,6 +38,19 @@
             </v-btn>
           </v-card-actions>
         </v-card>
+        <v-card v-else class="reset-password-card" raised tile>
+          <v-card-title class="headline">Reset Your Password</v-card-title>
+          <v-card-text>
+            <p>
+              Thank you! <br />
+              You have reset your password.
+            </p>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn outlined color="#c48c34" @click="goToLogin">Go to login</v-btn>
+          </v-card-actions>
+        </v-card>
       </v-row>
       <v-snackbar v-model="fail" :timeout="2000" color="#FF5722">
         {{ errMsg }}
@@ -53,6 +66,7 @@
 export default {
   name: "ResetPassword",
   data: () => ({
+    isResetPwd : false,
     valid: true,
     pwd: "",
     pwdShow: false,
@@ -90,15 +104,20 @@ export default {
         .post(this.$API + "/forget/reset", data)
         .then(res => {
           this.loading = false;
+          this.isResetPwd = true
           console.log(res);
-          location.href = "http://localhost:8080/login";
+          // location.href = "http://localhost:8080/login";
           console.log("success");
         })
         .catch(err => {
           this.loading = false;
           this.fail = true;
+          this.errMsg = err.response.data.err
           console.log(err.response);
         });
+    },
+    goToLogin () {
+      this.$router.push('login')
     }
   }
 };

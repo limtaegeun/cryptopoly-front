@@ -18,7 +18,7 @@
     </template>
 
     <v-list-item two-line>
-      <v-list-item-title class="logo">
+      <v-list-item-title class="logo-btn">
         Cryptopoly
       </v-list-item-title>
     </v-list-item>
@@ -28,9 +28,9 @@
     <v-list nav>
       <!-- Bug in Vuetify for first child of v-list not receiving proper border-radius -->
       <div />
-      <v-list-item to="/console/dashboard" active-class="primary white--text">
-        <v-list-item-title>Dashboard</v-list-item-title>
-      </v-list-item>
+<!--      <v-list-item to="/console/dashboard" active-class="primary white&#45;&#45;text">-->
+<!--        <v-list-item-title>Dashboard</v-list-item-title>-->
+<!--      </v-list-item>-->
       <v-list-group
         :prepend-icon="link.icon"
         :value="false"
@@ -83,26 +83,28 @@ export default Vue.extend({
     }
   },
   data: () => ({
-    links: [
-      {
-        icon: "",
-        text: "비트코인 (BTC)",
-        child: [
-          {
-            to: "/console/1d/btc",
-            icon: "",
-            text: "하루 단위 예측"
-          },{
-            to: "/console/30min/btc",
-            icon: "",
-            text: "30분 단위 예측"
-          }
-        ]
-      }
-    ]
   }),
   computed: {
-    ...mapState(["drawer"]),
+    ...mapState(["drawer", 'pairs']),
+    links () {
+      return this.pairs.map(pair => {
+        return {
+          icon: "",
+          text: `${pair.name} (${pair.baseCode}/ ${pair.quoteCode})`,
+          child: [
+            {
+              to: `/console/1d/${pair.id}`,
+              icon: "",
+              text: "하루 단위 예측"
+            },{
+              to: `/console/30min/${pair.id}`,
+              icon: "",
+              text: "30분 단위 예측"
+            }
+          ]
+        }
+      })
+    },
     inputValue: {
       get() {
         return this.drawer;
@@ -119,7 +121,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-.logo {
+.logo-btn {
   font-family: "Comfortaa", sans-serif;
   text-decoration: none;
   font-size: 23px;

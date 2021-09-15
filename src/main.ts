@@ -19,3 +19,10 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount("#app");
+
+declare module 'vue/types/vue' {
+  interface Vue {
+    $API : string,
+    $CDN : string
+  }
+}

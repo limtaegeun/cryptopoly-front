@@ -5,6 +5,7 @@
         <router-view />
       </v-fade-transition>
     </div>
+    <core-footer></core-footer>
   </v-content>
 </template>
 
@@ -14,13 +15,18 @@
   export default Vue.extend({
     name: "HomeView",
     components: {
+      CoreFooter: () => import("@/components/home/Footer.vue")
     },
   })
 </script>
 
 <style scoped lang="scss">
+#content-scroll-view {
+
+}
   #core-view {
-    padding-bottom: 100px;
+    padding-bottom: 82px;
     background-color: #f2f4f8;
+    min-height: calc(100vh - 44px);
   }
 </style>

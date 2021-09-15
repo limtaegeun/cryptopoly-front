@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <v-app>
     <router-view></router-view>
-  </div>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -14,25 +14,41 @@ export default Vue.extend({
     //
   }),
   beforeMount() {
-    let isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(
-      navigator.userAgent.toLowerCase()
-    );
-    this.setIsMobile(isMobile);
+    this.checkMobile()
+    this.checkLogin()
   },
   methods: {
-    ...mapMutations(["setIsMobile"])
+    ...mapMutations(["setIsMobile", "setUser"]),
+    checkMobile () {
+      let isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(
+          navigator.userAgent.toLowerCase()
+      );
+      this.setIsMobile(isMobile);
+    },
+    checkLogin () {
+      this.$http.get(this.$API + '/user/check', {
+        withCredentials: true
+      }).then(res => {
+        console.log(res.data)
+        this.setUser(res.data.user)
+      })
+    }
   }
 });
 </script>
 <style lang="scss">
+
 .keyColor {
-  color: #f9bc53;
+  color: #f0bd65;
 }
 .dark-key {
   color: #c48c34;
 }
 .background {
   background-color: #f2f4f8;
+}
+html {
+  overflow: hidden !important;
 }
 h1,
 h2,
@@ -44,7 +60,7 @@ p {
   font-family: "Noto Sans KR", "Roboto", sans-serif;
 }
 a {
-  color: #111111;
+  color: #111111 !important;
   text-decoration: none;
 }
 button:hover {
@@ -55,7 +71,9 @@ button:focus {
   outline: none;
   border: none;
 }
-
+.logo {
+  font-family: "Comfortaa", sans-serif;
+}
 .convex-card {
   border-radius: 8px;
   box-shadow: 8px 8px 16px 0px rgba(0, 0, 0, 0.06), -8px -8px 16px 0px #fff;
@@ -73,5 +91,7 @@ button:focus {
   border-radius: 8px;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.08), -2px -2px 4px 0px #fff;
   background-color: #f2f4f8;
+  padding: 5px 15px;
 }
+
 </style>

@@ -24,7 +24,9 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <a href="/forget" class="link">Forgot your password?</a>
+            <router-link to="/forget">
+              <p class="link">Forgot your password?</p>
+            </router-link>
             <v-spacer></v-spacer>
             <v-btn
               :disabled="!valid"
@@ -48,26 +50,32 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+import {User} from '@/declaration/interfaces'
+import {mapMutations} from "vuex";
+export default Vue.extend({
   name: "SignIn",
-  data: () => ({
-    valid: true,
-    email: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-    ],
-    pwd: "",
-    pwdShow: false,
-    pwdRules: [v => !!v || "Password is required"],
-    lazy: false,
-    loading: false,
-    fail: false,
-    errMsg: "Login failed"
-  }),
+  data(): any {
+    return {
+      valid: true,
+      email: "",
+      emailRules: [
+        (v: string) => !!v || "E-mail is required",
+        (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      ],
+      pwd: "",
+      pwdShow: false,
+      pwdRules: [(v: string) => !!v || "Password is required"],
+      lazy: false,
+      loading: false,
+      fail: false,
+      errMsg: "Login failed"
+    };
+  },
   methods: {
-    login() {
+    ...mapMutations(["setUser"]),
+    login(): void {
       this.$refs.form.validate();
       if (!this.valid) {
         return;
@@ -77,21 +85,24 @@ export default {
         password: this.pwd
       };
       this.$http
-        .post(this.$API + "/user/login", data)
-        .then(res => {
+        .post(this.$API + "/user/login", data, {
+          withCredentials: true
+        })
+        .then((res : {data: {user : User} }) => {
           this.loading = false;
           console.log(res);
-          location.href = "http://localhost:8080/console";
+          this.setUser(res.data.user)
+          this.$router.push('console')
           console.log("success");
         })
-        .catch(err => {
+        .catch((err : any) => {
           this.loading = false;
           this.fail = true;
           console.log(err.response);
         });
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
@@ -113,5 +124,6 @@ export default {
   margin-left: 10px;
   color: #111111;
   font-size: 11pt;
+  text-decoration-line: underline;
 }
 </style>

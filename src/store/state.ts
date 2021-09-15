@@ -3,9 +3,10 @@
 export default {
   drawer: null,
   isMobile: false,
-  user: {
-    email: "imori333@gmail.com",
-    username: "fucking ori",
-    memberDueDate: "2020-07-20"
-  }
+  user: null,
+  pairs: [
+    {id: 1, name : 'Bitcoin', baseCode: 'BTC', quoteCode : 'USD',  pair: 'USDT_BTC'},
+    {id: 2, name : 'Ethereum', baseCode: 'ETH', quoteCode : 'USD',  pair: 'USDT_ETH'},
+    {id: 3, name : 'Ripple', baseCode: 'XRP', quoteCode : 'USD',  pair: 'USDT_XRP'},
+  ]
 };

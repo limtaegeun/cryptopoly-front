@@ -67,33 +67,35 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+import {User} from '@/declaration/interfaces'
+import {mapMutations} from "vuex";
+
+export default Vue.extend({
   name: "SignUp",
   data: () => ({
     valid: true,
     name: "",
     nameRules: [
-      v => !!v || "Name is required",
-      v => (v && v.length <= 10) || "Name must be less than 10 characters"
+      (v: string) => !!v || "Name is required",
+      (v: string) => (v && v.length <= 10) || "Name must be less than 10 characters"
     ],
     email: "",
     emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      (v: string) => !!v || "E-mail is required",
+      (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid"
     ],
     pwd: "",
     pwdShow: false,
     pwdRules: [
-      v => !!v || "Password is required",
-      v =>
+      (v: string) => !!v || "Password is required",
+      (v: string) =>
         /(?=.{9,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/.test(v) ||
         "Use at least 9 characters in combination of uppercase, lowercase, numbers, and symbols"
     ],
     confirmPwd: "",
-    confirmRules: [
-      v => !!v || "Confirm password is required"
-    ],
+    confirmRules: [(v: string) => !!v || "Confirm password is required"],
     select: null,
     checkbox: false,
     lazy: false,
@@ -104,10 +106,10 @@ export default {
 
   methods: {
     validate() {
-      this.$refs.form.validate();
+      (this.$refs.form as HTMLFormElement).validate();
     },
     submit() {
-      this.$refs.form.validate();
+      (this.$refs.form as HTMLFormElement).validate();
       if (!this.valid) {
         return;
       }
@@ -125,8 +127,10 @@ export default {
       };
       this.$http
         .post(this.$API + "/user/signup", data)
-        .then(() => {
+        .then((res: { data: {user: User} }) => {
           this.loading = false;
+          this.$router.push({path: 'signupcomplete/' + data.username})
+          // console.log(res)
           // console.log("SUCCESS!!");
         })
         .catch(err => {
@@ -141,13 +145,13 @@ export default {
         });
     },
     reset() {
-      this.$refs.form.reset();
+      (this.$refs.form as HTMLFormElement).reset();
     },
     resetValidation() {
-      this.$refs.form.resetValidation();
+      (this.$refs.form as HTMLFormElement).resetValidation();
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

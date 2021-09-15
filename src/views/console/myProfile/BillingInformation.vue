@@ -45,7 +45,7 @@
         <v-btn @click="isEdit=!isEdit">Cancel</v-btn>
       </v-row>
       <v-row v-else class="button-wrapper">
-        <v-btn style="margin-right: 12px" @click="isEdit=!isEdit">Edit</v-btn>
+        <v-btn style="margin-right: 12px" @click="isEdit=!isEdit" disabled>Edit</v-btn>
         <v-btn>Delete</v-btn>
       </v-row>
     </div>
